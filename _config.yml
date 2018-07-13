@@ -1,21 +1,13 @@
 markdown: kramdown
 permalink: /posts/:year-:month-:day-:title.html
 
-title: Regularly Irrelevant
+title: "Regularly Irrelevant"
 author:
   github: moo64c
   email: moo64c@gmail.com
   name: Amir Arbel
 
 url: https://moo64c.github.io
-all_categories: [
-  ["mobile", "/posts/android.html"],
-  ["program", "/posts/program.html"],
-  ["web", "/posts/web.html"],
-  ["linux", "/posts/linux.html"],
-  ["other", "/posts/other.html"],
-  ["about", "/about.html"]
-]
 
 paginate: 8
 paginate_path: "posts/page:num"

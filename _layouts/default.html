@@ -11,7 +11,7 @@
 
 
 
-    <title>{{ page.title }} - {{ site.author.name }}</title>
+    <title>{{ page.title }}</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="/css/blog.css" rel="stylesheet"/>
     <!--[if lt IE 9]>
@@ -42,10 +42,13 @@
           <a class="navbar-brand" href="/">
             {{ site.title }}
           </a>
+          <a class="navbar-brand" href="/about.html">
+            About
+          </a>
         </div>
-        <div class="collapse navbar-collapse" id="bs-navbar-collapse">
+        <!-- <div class="collapse navbar-collapse" id="bs-navbar-collapse">
           {% include navigation.html %}
-        </div>
+        </div> -->
       </div>
     </nav>
     <div class="container">
@@ -55,14 +58,6 @@
           <hr>
         </div>
         <div class="col-md-4">
-          <div class="well">
-            <h4>
-              Categories
-            </h4>
-            <div class="row">
-              {% include categories.html %}
-            </div>
-          </div>
           <div class="well">
             <h4>
               Recent
