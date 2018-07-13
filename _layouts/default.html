@@ -3,6 +3,7 @@
 		<head>
 			<title>{{ page.title }}</title>
 			<!-- link to main stylesheet -->
+			<link rel="stylesheet" type="text/css" href="{{ "/assets/lib/bootstrap.css" | relative_url }}">
 			<link rel="stylesheet" type="text/css" href="{{ "/assets/css/style.css" | relative_url }}">
 		</head>
 		<body>
@@ -21,8 +22,8 @@
 			</div><!-- /.container -->
 			<footer>
 	    		<ul>
-	        		<li><a href="mailto:{{ site.info.email }}">email</a></li>
-	        		<li><a href="{{ site.info.site }}">site</a></li>
+	        		<li><a href="mailto:{{ site.author.email }}">email</a></li>
+	        		<li><a href="{{ site.url }}">{{ site.title }}</a></li>
 				</ul>
 			</footer>
 		</body>
