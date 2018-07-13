@@ -7,7 +7,7 @@ author:
   email: moo64c@gmail.com
   name: Amir Arbel
 
-url: https://moo64c.github.io
+url: "https://moo64c.github.io"
 
 paginate: 8
 paginate_path: "posts/page:num"
