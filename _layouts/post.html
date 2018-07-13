@@ -1,30 +1,29 @@
 ---
 layout: default
 ---
-<!-- Title -->
-<a href="{{site.url}}{{page.url}}" title="{{page.name}}">post permalink</a>
-<h2>{{ page.title }}</h2>
-	{% if page.tags.size > 0%}
-		<b>tags: </b>
-		{% for tag in page.tags %}
-			{% if tag != "" %}
-				<a href="/tags.html#{{ tag }}"><i>{{ tag }}</i></a>
-				{% if forloop.index != page.tags.size %},
+<div class="row">
+	<h2>{{ page.title }}</h2>
+		<a href="{{site.url}}{{page.url}}" title="{{page.name}}">permalink</a><br>
+		{% if page.tags.size > 0%}
+			<b>tags: </b>
+			{% for tag in page.tags %}
+				{% if tag != "" %}
+					<a href="/tags.html#{{ tag }}"><i>{{ tag }}</i></a>
+					{% if forloop.index != page.tags.size %},
+					{% endif %}
 				{% endif %}
-			{% endif %}
-		{% endfor %}
-	{% endif %}
-<div class="post-date">
-	<span class="glyphicon glyphicon-time"></span>
-	{{ page.date | date:"%Y-%m-%d" }}
+			{% endfor %}
+		{% endif %}
+	<div class="post-date">
+		<span class="glyphicon glyphicon-time"></span>
+		{{ page.date | date:"%Y-%m-%d" }}
+	</div>
+	<hr/>
+	<br/><br/>
+		{{ content }}
+	<br/><br/>
 </div>
-<br/>
 
-<div style="text-indent:2em;">
-	{{ content }}
-</div>
-
-</b>
 
 
 <!-- No commeting currently.

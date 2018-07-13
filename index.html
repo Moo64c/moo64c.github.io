@@ -1,6 +1,6 @@
 ---
 layout: default
-title: {{ site.title }}
+title: Main page
 ---
 
 <!-- Loop output paged posts -->
@@ -9,11 +9,11 @@ title: {{ site.title }}
   <a href="{{ post.url }}">
     {{ post.title }}
   </a>
-  <div class="post-date">
-	<span class="glyphicon glyphicon-time"></span>
-	{{ post.date | date:"%Y-%m-%d" }}
-  </div>
 </h2>
+<div class="post-date">
+  <span class="glyphicon glyphicon-time"></span>
+  {{ post.date | date:"%Y-%m-%d" }}
+</div>
 <hr>
 {{ post.excerpt }}
 	<p><h3><a href="{{ post.url }}"> Read more &raquo;</a></h3></p>
