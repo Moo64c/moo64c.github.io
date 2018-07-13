@@ -1,7 +1,12 @@
+---
+# Front matter comment to ensure Jekyll properly reads file.
+---
+
 body {
-    margin: 60px auto;
-    width: 70%;
+  background: black !important; color: white !important;
 }
+
+
 nav ul, footer ul {
     font-family:'Helvetica', 'Arial', 'Sans-Serif';
     padding: 0px;
