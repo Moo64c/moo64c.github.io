@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="{{ page.title }} - {{ site.name }} - 作者:{{ site.author }}"/>
+    <meta name="description" content="{{ page.title }} - {{ site.name }} - {{ site.author.name }}"/>
     <title>{% for cat in site.all_categories %}{% if page.category == cat[0] %}栏目：{{cat[1]}} - {{ site.name }}{% endif %}{% endfor %}</title>
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet"/>
@@ -25,7 +25,7 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="/js/bootstrap.min.js"></script>
   </head>
-  
+
   <body>
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -49,7 +49,7 @@
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          {% include navigation.html %} 
+          {% include navigation.html %}
         </div>
         <!-- /.navbar-collapse -->
       </div>
@@ -68,12 +68,12 @@
 			  {% capture y %}{{post.date | date:"%Y"}}{% endcapture %}
 			  {% if year != y %}
 				{% assign year = y %}
-				<h2>{{ post.date | date: '%Y' }}</h2> 
+				<h2>{{ post.date | date: '%Y' }}</h2>
 			  {% endif %}
 			  <li>
 				<h4><span>{{ post.date | date:"%Y-%m-%d" }}</span>&raquo;
 				<a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h4>
-			  </li> 
+			  </li>
 			{% endfor %}
 			</ul>
         </div>
@@ -85,7 +85,7 @@
               栏目分类
             </h4>
             <div class="row">
-              {% include categories.html %} 
+              {% include categories.html %}
             </div>
             <!-- /.row -->
           </div>
@@ -95,7 +95,7 @@
               最新文章
             </h4>
 			<div class="row">
-              {% include recent_posts.html %} 
+              {% include recent_posts.html %}
 			</div>
           </div>
         </div>
@@ -106,7 +106,7 @@
       <footer>
         <div class="row">
           <div class="col-lg-12">
-            {% include copyright.html %} 
+            {% include copyright.html %}
           </div>
           <!-- /.col-lg-12 -->
         </div>
