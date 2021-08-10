@@ -1,21 +1,25 @@
 ---
-title:  "Somebody in the Future"
+title:  "Cassandra: A Scale-y Story"
 layout: post
 author: Amir Arbel (@moo64c)
 categories: ["Devlog", "Lua", "Communicator", "Lightly technical"]
 tags: [backend, database, cassandra, epoll, lua, luajit, driver, threading]
 ---
 
+# Cassandra: A Big Scale-y Story
+A making our application and Cassandra perform better by reducing database connections.
+
 ## Whose Scale is This Anyway
 A product's scale - size of service, supported traffic and distribution reach - changes over it's life cycle. At first, a company will push out a product that works. Allowing a product to scale up nicely is not easy. Code cannot always be written to fit any scale and it cannot take precedence over getting a product out (or dealing with bugs). In the meantime the product might generate higher costs, run a bit slower and have less features in order to just get it out and sell it. It is always hard to know where to stop development - investing more development time means investing more money, but you usually get more out of it. Compromises are need to be made and developers always have to keep this in mind.
 
-If it will be worth the trouble - somebody- sometime in the future - will take care of it. 
+If it will be worth the trouble, somebody - sometime in the future - will take care of it. 
 
 ## When Its Worth the Trouble
-Our Database Administration (DBA) team was upset - every tiny configuration change in our product's cluster made their Cassandra database reach near catastrophe. New connections are dropped. Existing connection cannot get a simple query through. From their metrics it was obvious how every time the application side restarts, the database cluster has to deal with hundreds of new connections simultaneously. Our product uses a few dozen application machines that create connections to the database cluster. One connection should be enough for every machine, right? Checking the logs, metrics and the code revealed that this expectation is not meant, and this was one problem that was not so critical before - every machine in the application cluster creates half a dozen or more connections. 
+Our Database Administration (DBA) team was upset - every tiny configuration change in our product's cluster made their Cassandra database reach near catastrophe. New connections are dropped. Existing connections could not get a simple query through. From their metrics it was obvious how every time the application side restarts, the database cluster has to deal with hundreds of new connections simultaneously. Our product uses a few dozen application machines that create connections to the database cluster. One connection should be enough for every machine, right? Checking the logs, metrics and the code revealed that this expectation is not meant, and this was one problem that was not so critical before - every machine in the application cluster creates half a dozen or more connections. 
 
 Why?
-> When our machines start up, a central process creates and controls worker processes, and a "base" memory is shared from the central process. Every worker process in our controlling process keeps its memory insulated from the rest. Our application does not start database connections before this separation meaning each worker process needs to create its own connection. This allows us to use *thread-unsafe* share libraries and code - we can not use them in a threaded environment since they keep an internal state, which might break if two workers will access it at the same time. This also forces *every* process to use its own database connection. A database connection consists of a socket connection per Cassandra node (Database Cluster machine) and an additional socket connection that controls it. There is also some caching being done. When you have enough application machines and enough Cassandra nodes, this means hundreds to a couple thousand connection start up at the same time if the application cluster restarts - for example, after a configuration change, which happens all the time. Cassandra was never meant to handle so much over in such a time bracket, so some new connections are not handled and dropped and many queries will not be handled until a some connection will complete. Even if the cluster was incrementally gaining machines, at some point the Cassandra side has to handle thousands of connections - to every database node - which leads to slowdowns.
+
+When our machines start up, a central process creates and controls worker processes, and a "base" memory is shared from the central process. Every worker process under the central process keeps its memory insulated from the rest. Our application does not start database connections before this separation meaning each worker process needs to create its own connection. This allows us to use *thread-unsafe* libraries and code - we can not use them in a threaded environment since they keep an internal state, which might break if two workers will access it at the same time. This also forces *every* process to use its own database connection. A database connection consists of a socket connection per Cassandra node (Database Cluster machine) and an additional socket connection that controls it. There is also some caching being done. When you have enough application machines and enough Cassandra nodes, this means hundreds to a couple thousand connection start up at the same time if the application cluster restarts - for example, after a configuration change, which happens all the time. Cassandra was never meant to handle so much over in such a time bracket, so some new connections are not handled and dropped and many queries will not be handled until a some connection will complete. Even if the cluster was incrementally gaining machines, at some point the Cassandra side has to handle thousands of connections - to every database node - which leads to slowdowns.
 
 ## The Future is Now
 When the connection schema was developed - it was not a real problem. It is an issue of **scale**. The effort needed to fix this then-non-issue just did not make sense when you have no more than 100-ish connections working against a small Cassandra cluster. Cassandra will handle this much traffic and more just fine. You will see some spikes in graphs when the application clusters are restarted, but nothing too bad. This is only an issue when the size of the clusters start to scale up. 
@@ -29,6 +33,10 @@ Cassandra Communicator (CC for short) was the solution we came up with.
 Have too many connections? No problem. Let's just keep one in a separate process. Local machine sockets are cheap, fast, reliable and easy to run. Have every worker open a socket that handles all its Cassandra needs in one stop-shop. Use a simple protocol and send JSON-formatted instructions, and viola! you got support for any language that can open a local socket. All this - and more - in just one thread and just one connection per machine. A single thread to handle all Cassandra requests from all of the worker processes in a machine. CC does this in less than 1 millisecond (usually much less) of time added to the database request and response.
 
 Reducing the connections meant that restarting twenty nodes cost us twenty disconnects and twenty connects, instead of several hundred. Cassandra clusters are no longer suffering from crippling stress whenever a configuration file changes and the cluster requires a restart. The amount of existing connections dropped by more than 80% - which lead to better performance both in connectivity and queries run time. Most importantly, our DBAs were finally happy.
+
+![Graph of communicator connections and Cassandra Connections. Shows over 3200 communicator clients and 320 Cassandra connections](../_images/2021-07-31-Cassandra-A%20Scale-y%20Story_1.png)
+
+The graph above tracks database and CC connections from one of our production clusters. Keep in mind that every CC connection used to be a database connection.
 
 ## Peek Behind the Curtain
 Cassandra Communicator adds great value to our machines, and relays on a couple of mechanics: Epoll and the Cassandra C driver.
