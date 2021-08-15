@@ -35,11 +35,11 @@ Cassandra Communicator (abbreviated CC) was the solution we came up with.
 
 Have too many connections? No problem. Let's just keep one in a separate process. Local machine sockets are cheap, fast, reliable and easy to run. Have every worker open a socket that handles all its Cassandra needs in one stop-shop. Use a simple protocol and send JSON-formatted instructions, and viola! you got support for any language that can open a local socket. All this - and more - in just one thread and just one connection per machine. A single thread to handle all Cassandra requests from all of the worker processes in a machine. CC does this in less than 1 millisecond (usually much less) of time added to the database request and response.
 
-![Application machine with Communicator vs. application machine without communicator. Number of connections to Cassandra is constant with Communicator.](https://moo64c.github.io/assets/_images/2021-07-31-Cassandra-A%20Scale-y%20Story_2.png)
+![Application machine with Communicator vs. application machine without communicator. Number of connections to Cassandra is constant with Communicator.](https://moo64c.github.io/assets/images/2021-07-31-Cassandra-A%20Scale-y%20Story_2.png)
 
 Reducing the connections meant that restarting twenty nodes cost us twenty disconnects and twenty connects, instead of several hundred. Cassandra clusters are no longer suffering from crippling stress whenever a configuration file changes and the cluster requires a restart. The amount of existing connections dropped by more than 80% - which lead to better performance both in connectivity and queries run time. Most importantly, our DBAs were finally happy.
 
-![Graph of communicator connections and Cassandra Connections. Shows over 3200 communicator clients and 320 Cassandra connections](https://moo64c.github.io/assets/_images/2021-07-31-Cassandra-A%20Scale-y%20Story_1.png)
+![Graph of communicator connections and Cassandra Connections. Shows over 3200 communicator clients and 320 Cassandra connections](https://moo64c.github.io/assets/images/2021-07-31-Cassandra-A%20Scale-y%20Story_1.png)
 
 The graph above tracks database and CC connections from one of our production clusters - CC value shown where every client in the graph used to be a database connection.
 
@@ -66,7 +66,7 @@ But can we get even more performance?
 ## Optimization Prime
 Optimizations are a tricky thing. You can almost always optimize more. Will it be worth it to invest more time and effort, to introduce more dependencies or limitations? When Cassandra was first introduced to our application the multiple connections issue was known, but it was deferred to somebody in the future. It was not worth it at the time. As with any project, sometimes you just have to stop when things are working great and you are ready to go, even when there is an obvious fault that will not scale well.
 
-![Application response time before and after Communicator. Percentage of requests with response time over 0.5 second drops from 15% to 2% with Communicator](https://moo64c.github.io/assets/_images/2021-07-31-Cassandra-A%20Scale-y%20Story_3.png)
+![Application response time before and after Communicator. Percentage of requests with response time over 0.5 second drops from 15% to 2% with Communicator](https://moo64c.github.io/assets/images/2021-07-31-Cassandra-A%20Scale-y%20Story_3.png)
 
 CC runs great in production - the database graphs became pretty when it launched - pretty enough for the head of R&D to display in the quarterly company talk. I speculate we managed to get about 80% of the performance there was to gain by creating it. But what about the other possible 20% optimization, just sitting there all forgotten?
 
