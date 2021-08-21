@@ -7,7 +7,7 @@ tags: [backend, database, cassandra, epoll, lua, luajit, driver, threading]
 ---
 
 # Cassandra: A Big Scale-y Story
-Making our application perform better by reducing database connections.
+A story about making an application perform better by reducing database connections.
 
 
 ## Whose Scale is This Anyway
@@ -80,4 +80,6 @@ I guess somebody in the *future* will have to do that.
 
 Thanks for reading! 
 
-This article will be featured on the Trusteer Engineering (https://w3.ibm.com/w3publisher/trusteer-engineering/blog) and my personal Github (https://moo64c.github.io/) blogs. 
+Amir
+
+This article will be featured on the [Trusteer Engineering](https://w3.ibm.com/w3publisher/trusteer-engineering/blog) and [my personal Github](https://moo64c.github.io/) blogs. 
