@@ -1,7 +1,6 @@
 ---
 title:  "Cassandra: A Scale-y Story"
 layout: single
-author: Amir Arbel (@moo64c)
 categories: ["Devlog", "Lua", "Communicator", "Lightly technical"]
 tags: [backend, database, cassandra, epoll, lua, luajit, driver, threading]
 ---
