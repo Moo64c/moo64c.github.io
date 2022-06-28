@@ -8,9 +8,3 @@ main:
     url: /about
   - title: "Contact"
     url: /contact
-  - title: "Projects"
-    url: /projects
-  - title: "Presentations"
-    url: /presentations
-  - title: "Quotes"
-    url: /quotes
