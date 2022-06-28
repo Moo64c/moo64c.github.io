@@ -6,10 +6,6 @@ categories: ["Devlog", "Lua", "Communicator", "Lightly technical"]
 tags: [backend, database, cassandra, epoll, lua, luajit, driver, threading]
 ---
 
-# Cassandra: A Big Scale-y Story
-A story about making an application perform better by reducing database connections.
-
-
 ## Whose Scale is This Anyway
 A product's scale - size of service, supported traffic and distribution reach - changes over its life cycle. At first, a company will push out a product that works. Allowing a product to scale up nicely is not easy. Code cannot always be written to fit any scale and it cannot take precedence over getting a product out (or dealing with bugs). In the meantime the product might generate higher costs, run a bit slower and have less features in order to just get it out and sell it. It is always hard to know where to stop development - investing more development time means investing more money, but you usually get more out of it. Compromises are need to be made and developers always have to keep this in mind.
 
