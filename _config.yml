@@ -1,15 +1,16 @@
 markdown: kramdown
 
 title: "Regularly Irrelevant"
-subtitle: # site tagline that appears below site title in masthead
+subtitle: "Man communicating to computer"
 description: "Amir's personal blog"
-bio: #"Hacker. Emacs fanatic. Lover of parentheses. Firebrand. Just another programmer with too many opinions. I'm not the best, but I'm pretty good."
+bio: "Programmer who sometimes photographs birds."
 
 author:
   github: moo64c
+  linkedin: arbelamir/
   email: moo64c@gmail.com
   name: Amir Arbel
-  avatar: "/assets/images/bozhidar_avatar.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar: "/assets/images/1516846339809.jpeg"
   # links:
   #   - label: "Email"
   #     icon: "fas fa-fw fa-envelope-square"
