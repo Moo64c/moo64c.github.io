@@ -1,14 +1,14 @@
 markdown: kramdown
 
 title: "Regularly Irrelevant"
-subtitle: "Man communicating to computer"
+subtitle: "A guy trying to communicate to a computer"
 description: "Amir's personal blog"
 bio: "Programmer who sometimes photographs birds."
 
 author:
   github: moo64c
   linkedin: arbelamir/
-  email: moo64c@gmail.com
+  email: moo64c+blog@gmail.com
   name: Amir Arbel
   avatar: "/assets/images/1516846339809.jpeg"
   # links:
