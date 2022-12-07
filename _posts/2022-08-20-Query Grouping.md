@@ -24,9 +24,9 @@ Code that needs the queried data can be moved to a thread, waiting on the query 
 
 ![Sending queries into their own threads and joining the main thread later.](../assets/images/2022-08-20-Query%20Grouping/threading.png)
 
-Splitting the queries into threads requires a bit of work - most of it is finding queries that fit this use case in the code and where they need to _join_ back to the main thread. Threads' theoretical performance boost comes a hefty cost of complexity. The worker might still wait for some queries - it is up to the developer to find the correct use cases. This makes threads are an optimal choice for very specific use cases - such as code that draws a lot of different data sets completely foreign to one another for different uses.
+Splitting the queries into threads requires a bit of work - most of it is finding queries that fit this use case in the code and where they need to _join_ back to the main thread meaning the optimization comes with a hefty cost of complexity. Used incorrectly, the worker can actually end up actually waiting more - it is up to the developer to find the correct use cases. This makes threads an optimal choice for very specific use cases - such as code that draws a lot of different data sets completely foreign to one another for different uses.
 
-Not only does the threading solution has a good chance of not optimizing the worker run time, threads add a not-so-hidden cost of [_context switching_](https://en.wikipedia.org/wiki/Context_switch), which might eliminate any potential performance benefit; in addition, every time you add a thread the eternal headache of locking mechanisms is right around the corner. This is why - as a generic solution - threading does not fit well. More importantly working with Lua - especially in the uWSGI context - **does not allow for threading** at all. Everything must happen in the same thread or in some other process (well, like Communicator).
+Not only does the threading solution has a chance of not optimizing the worker run time, threads add a not-so-hidden cost of [_context switching_](https://en.wikipedia.org/wiki/Context_switch), which might eliminate any potential performance benefit; in addition, every time you add a thread the eternal headache of locking mechanisms is right around the corner. This is why - as a generic solution - threading does not fit well. More importantly working with Lua - especially in the uWSGI context - **does not allow for threading** at all. Everything must happen in the same thread or in some other process (well, like Communicator).
 
 Luckily, there is more than one solution to optimizing query wait time. Lets go back to the drawing board.
 
@@ -56,10 +56,11 @@ Combining coroutines with grouped queries can gain much of the performance lost 
 
 ![Grouped queries with coroutines must wait work to finish before starting the query execution.](../assets/images/2022-08-20-Query%20Grouping/normal_vs_threading_vs_grouped.png)
 
-According to the diagram above grouping with coroutines might be worse than the threading example, but in most use cases (including ours) most worker code will run in _nanoseconds_ where any query will take _microseconds_. In practice, grouping allows for similar or better performance than threading in most cases. Disproving this last statement is left as an exercise for the reader.
+According to the diagram above grouping with coroutines might be worse than the threading example, but in most use cases (including ours) most worker code will run in _nanoseconds_ where any query will take _microseconds_ - meaning the worker (orange) parts are thousands of times smaller than any query (red/blue) parts. In practice, grouping allows for similar or better performance than threading in _most_ cases.
+Disproving this last statement is left as an exercise for the reader.
 
 <!-- todo: better subtitle -->
-## How it all fits together
+## How It Fits Together
 Query Grouping is name of the interface we created that wraps everything together. We can turn the functions containing the queries to coroutines, and we can manage the coroutines to resume when their query completes. The only thing left is to force queries to `yield` if they are trying to query in a Query Grouping context, and voila! We can shave several milliseconds from any request involving the database, which is all of them.
 
 We saw an overall improvement in performance after implementing Query Grouping. It is currently only implemented for Cassandra but there are plans to implement it for MySQL, where the benefits would be much much more noticeable in every request. Query Grouping also forces developers to name the groups, allowing us to expose configuration to roll back turn a specific query group back to non-coroutine flow if a problem is detected.
@@ -71,9 +72,9 @@ Lets say we have the functions `f1`,`f2` and `f3` (which do not affect each othe
   f2()
   f3()
 ```
-In the original code each function would run, query the database - making the worker wait on the request - and compute something with the result. The fully synchronous case is the worst performance wise, and there would be six wait times adding up.
+In the original code each function would run, query the database - making the worker wait on the request - and compute something with the result. The fully synchronous case is the worst performance wise, and there would be **six** waiting periods.
 
-As the functions and their result do not affect one another, they can all run in one query group. To do so we just need to create a query group, add the functions, and run the group:
+As the functions and their result do not affect one another, they can all run in one query group. To do so we just need to create a group, add the functions, and run it:
 ```
   local group = query_grouping_manager.new_routines_group("group1")
   group:add(f1)
@@ -81,7 +82,7 @@ As the functions and their result do not affect one another, they can all run in
   group:add(f3)
   group:run()
 ```
-That's it; you add callbacks that turn automatically into coroutines, and group:run() blocks until everything is done. Assuming each function have two queries, six queries will execute using just two groups of queries, Blocking twice instead of six times, with the time cost of the worst query in each group.
+That's it; you add callbacks that turn automatically into coroutines, and `group:run()` blocks until everything is done. Assuming each function have two queries, six queries will execute using just two groups of queries, Blocking **twice** instead of **six** times, with the time cost of the worst query in each group.
 
 #### What if `f3` does not even query the database?
 If a function does not query the database, it will never reach a `_yield_` call, meaning it will run until it is finished. This marks the coroutine as `dead`. We can only move on from `group:run()` after all added (and nested) coroutines `dead`. We would still block twice for two different groups, but there is still a performance boost - the worst queries of two groups is less than the sum of the contained four queries' time.
@@ -97,7 +98,7 @@ end
 ```
 In that case, we block twice for two groups: one group run completes the queries for `f2` and `f3` and the query in `f1_query1`, but `f1_query2` will require an additional group (and block again). `f2` and `f3` will resume after the first run and reach their end (since there are no more queries, they will not `yield`). The second group would only execute `f1_query2`, and that is a bit wasteful.
 
-Assuming the queries in `f1` are not co-dependent (`f1_query2` does not need anything from `f1_query2`), we can do better: create a _nested_ query group inside of `f1`:
+Assuming the queries in `f1` are not co-dependent (`f1_query2` does not need anything from `f1_query2`), we can do better: create a _nested_ query group inside of `f1`. Query Grouping can flatten any _nested_ queries to run in parallel to one another - regardless of nesting depth:
 
 ```
 function f1()
@@ -129,4 +130,4 @@ The Query Grouping implementation suggests that we do not necessarily need to gr
 Thanks for reading!
 
 ## Some credits
-Query Grouping was created, designed and supported by Nir Nahum, Adi Meiman and I, Amir Arbel from Pinpoint R&D Team.
+Query Grouping was created, designed and supported by Nir Nahum, Adi Meiman and Amir Arbel from Pinpoint R&D Team.
