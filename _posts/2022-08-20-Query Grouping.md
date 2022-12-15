@@ -6,7 +6,9 @@ tags: [backend, database, cassandra, lua, threading, coroutines, async]
 ---
 
 ## ...But Some are More Equal Than Others
-Database queries are not created equal. Some are short and simple, some are long, arduous and complicated. Some take a tiny amount of time, some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans or a lazy network card or some [mumbo-jumbo about tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time. While the query is executing, a uWSGI worker is waiting. A waiting worker is a waste, and wait time adds up _really, really_ fast. We need to optimize this wait time, and we need it yesterday.
+Database queries are not created equal. Some are short and simple, some are long, arduous and complicated. Some take a tiny amount of time, some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans or a lazy network card or some [mumbo-jumbo about tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time. While the query is executing, a uWSGI worker is waiting. A waiting worker is waiting customer, one that would prefer a speedy API. If a request takes over a few hundred milliseconds, a customer might decide to start scouting for a faster solution and every millisecond counts.
+
+A waiting worker is also a waste, and query wait times add up _really, really_ fast. We need to optimize this wait time, and we need it yesterday.
 
 ## Frankly, my darling, I don't give a _query_
 One way we made [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) optimize queries is to perform all **write** queries _without replying to the worker_. A uWSGI worker now sends the `insert` or `update` query to the database, and go on its merry way. They could not care less if the write actually succeeded - and for good reason: would they do much more than **write** something to the log if the write failed? Communicator can handle that. Most **Write** queries no longer bother our workers. Caring causes waiting on a write before doing something else, and requires adding a flag to the query when sent to Communicator.
@@ -60,14 +62,14 @@ According to the diagram above grouping with coroutines might be worse than the 
 Disproving this last statement is left as an exercise for the reader.
 
 <!-- todo: better subtitle -->
-## How It Fits Together
+## Making Queries Great Again
 Query Grouping is name of the interface we created that wraps everything together. We can turn the functions containing the queries to coroutines, and we can manage the coroutines to resume when their query completes. The only thing left is to force queries to `yield` if they are trying to query in a Query Grouping context, and voila! We can shave several milliseconds from any request involving the database, which is all of them.
 
 We saw an overall improvement in performance after implementing Query Grouping. It is currently only implemented for Cassandra but there are plans to implement it for MySQL, where the benefits would be much much more noticeable in every request. Query Grouping also forces developers to name the groups, allowing us to expose configuration to roll back turn a specific query group back to non-coroutine flow if a problem is detected.
 
-### Great... but what does it look like?
+### Fresh Samples
 Lets say we have the functions `f1`,`f2` and `f3` (which do not affect each other) each of which contain two queries and do something with their result. Lets say they all run one after another:
-```
+```lua
   f1()
   f2()
   f3()
@@ -75,11 +77,13 @@ Lets say we have the functions `f1`,`f2` and `f3` (which do not affect each othe
 In the original code each function would run, query the database - making the worker wait on the request - and compute something with the result. The fully synchronous case is the worst performance wise, and there would be **six** waiting periods.
 
 As the functions and their result do not affect one another, they can all run in one query group. To do so we just need to create a group, add the functions, and run it:
-```
-  local group = query_grouping_manager.new_routines_group("group1")
+```lua
+  local group = query_grouping.new_routines_group("group1")
+
   group:add(f1)
   group:add(f2)
   group:add(f3)
+
   group:run()
 ```
 That's it; you add callbacks that turn automatically into coroutines, and `group:run()` blocks until everything is done. Assuming each function have two queries, six queries will execute using just two groups of queries, Blocking **twice** instead of **six** times, with the time cost of the worst query in each group.
@@ -88,7 +92,7 @@ That's it; you add callbacks that turn automatically into coroutines, and `group
 If a function does not query the database, it will never reach a `_yield_` call, meaning it will run until it is finished. This marks the coroutine as `dead`. We can only move on from `group:run()` after all added (and nested) coroutines `dead`. We would still block twice for two different groups, but there is still a performance boost - the worst queries of two groups is less than the sum of the contained four queries' time.
 
 #### But what if `f1` has two queries (`f1_query1`, `f1_query2`) and `f2`,`f3` have only one each?
-```
+```lua
 function f1()
   local result1 = f1_query1()
   local result2 = f1_query2()
@@ -100,7 +104,7 @@ In that case, we block twice for two groups: one group run completes the queries
 
 Assuming the queries in `f1` are not co-dependent (`f1_query2` does not need anything from `f1_query2`), we can do better: create a _nested_ query group inside of `f1`. Query Grouping can flatten any _nested_ queries to run in parallel to one another - regardless of nesting depth:
 
-```
+```lua
 function f1()
   local result1, result2
   local group = query_grouping.new_routines_group("group_f1")
@@ -123,11 +127,10 @@ This nested group support is what really makes a big difference in the engineeri
 
 The only obvious limits to use Query Grouping is that the callbacks added do not directly depend on one another - you could share state to some degree and designed carefully - even have some results from one callback used in a different one. There are no guarantees on order of execution inside a Group except the yields between queries, which means you should avoid using a Redis pipeline in one coroutine and letting things jump around.
 
-## One more thing
-The Query Grouping implementation suggests that we do not necessarily need to group the queries - at the `group:add(...)` stage, the request can go to Communicator and start doing its thing, shaving additional precious time and actually matching the performance diagram above for threads (and the `run` can be a literal `await` call). It is true but it would require a rewrite of the Communicator client code on our side, which is quite unlikely considering its potential benefits are slim compared to the benefit we can attain from simply sending everything as a group. The [80-20 rule](https://en.wikipedia.org/wiki/Pareto_principle) applies here; for an additional "20%" performance benefit the engineering cost would be quite high and prone to bugs.
-
+## Where to Stop
+The Query Grouping implementation suggests that we do not necessarily need to group the queries - at the `group:add(...)` stage, the request can go to Communicator and start doing its thing, shaving additional precious time and actually matching the performance diagram above for threads (and the `run` can be a literal `await` call). You can send the request, but it would require a rewrite of the Communicator client code on our side. Rewrite seems unlikely considering the potential benefits are slim compared to the benefit we can attain from simply sending everything as a group. The [80-20 rule](https://en.wikipedia.org/wiki/Pareto_principle) applies here; for an additional "20%" performance benefit the engineering cost would be quite high and prone to bugs.
 
 Thanks for reading!
 
-## Some credits
+## Credits
 Query Grouping was created, designed and supported by Nir Nahum, Adi Meiman and Amir Arbel from Pinpoint R&D Team.
