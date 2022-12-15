@@ -30,10 +30,10 @@ Adapting existing code - splitting the queries into threads - requires a bit of 
 
 Not only does the threading solution has a chance of not optimizing the worker run time, threads add a not-so-hidden cost of [_context switching_](https://en.wikipedia.org/wiki/Context_switch), which might eliminate any potential performance benefit; in addition, every time you add a thread the eternal headache of locking mechanisms is right around the corner. This is why - as a generic solution - threading does not fit well. More importantly our codebase  **does not allow for threading** at all. Everything must happen in the same thread or in some other process (well, like Communicator).
 
-Luckily, there is more than one solution to optimizing query wait time. Lets go back to the drawing board.
+Luckily, there is more than one solution to optimizing query wait time. Let us go back to the drawing board.
 
 ## Come Together, Right Now
-Our client for Communicator was implemented with the existing synchronous code in mind meaning every time worker sends a query to Communicator it blocks until the query completes. Communicator handles itself async queries directly to Cassandra so it makes sense to have the worker send a group of queries instead of one - from the worker perspective they will all run at the same time. Grouped queries would only takes the group's worst query time to execute, instead of the sum of times for all queries. There is a certain overhead cost for grouping up (memory wise, mostly) and sending larger datasets over local TCP sockets - but it a very worthy tradeoff.
+Our client for Communicator was implemented with the existing synchronous code in mind meaning every time the worker sends a query to Communicator it blocks until the query completes. Communicator handles itself async queries directly to Cassandra so it makes sense to have the worker send a group of queries instead of one - from the worker perspective they will all run at the same time. Grouped queries would only takes the group's worst query time to execute, instead of the sum of times for all queries. There is a certain overhead cost for grouping up (memory wise, mostly) and sending larger datasets over local TCP sockets - but it a very worthy tradeoff.
 
 ![The async mechanism reduces worker wait time by waiting for as many queries as possible at once.](../assets/images/2022-08-20-Query%20Grouping/Sync%20V%20Async.png)
 
