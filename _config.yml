@@ -188,6 +188,19 @@ compress_html:
 #       - Clojure
 #       - Meta
 
+repository: "moo64c/moo64c.github.io"
+comments:
+  provider: "giscus"
+  giscus:
+    repo:                "moo64c/moo64c.github.io"
+    repo-id:             "MDEwOlJlcG9zaXRvcnkxNDA1OTkwMTE="
+    category:            "Comments"
+    category-id:         "DIC_kwDOCGFe484CTGTG"
+    mapping:             "pathname"
+    reactions-enabled:    "1"
+    theme:               "preferred_color_scheme"
+    crossorigin:         "anonymous"
+
 # Defaults
 defaults:
   # _posts
