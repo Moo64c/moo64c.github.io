@@ -5,13 +5,13 @@ categories: ["Devlog", "Lua", "Communicator"]
 tags: [backend, database, cassandra, lua, threading, coroutines, async]
 ---
 
-## ...But Some are More Equal Than Others
-Database queries are not created equal. Some are short and simple, some are long, arduous and complicated. Some take a tiny amount of time, some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans or a lazy network card or some [mumbo-jumbo about tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time. While the query is executing, a uWSGI worker is waiting. A waiting worker is waiting customer, one that would prefer a speedy API. If a request takes over a few hundred milliseconds, a customer might decide to start scouting for a faster solution and every millisecond counts.
+## ...More Equal Than Others
+Database queries are not created equal - some are short and simple, some are long, arduous and complicated. Some take an insignificant amount of time and some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans, a lazy network card or some mumbo jumbo about [tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time. While the query is executing, an application worker is waiting. A waiting worker is waiting customer. A waiting customer might prefer a quicker API. If a request takes over a few hundred milliseconds, a customer might decide to start scouting for a faster solution. Few milliseconds can cost millions in lost contracts.
 
-A waiting worker is also a waste, and query wait times add up _really, really_ fast. We need to optimize this wait time, and we need it yesterday.
+A waiting worker is also a waste, computers are generally quite fast - waiting for a millisecond equals around 3 million wasted instruction cycles on a modern CPU. These query wait times add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
 
 ## Frankly, my darling, I don't give a _query_
-One way we made [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) optimize queries is to perform all **write** queries _without replying to the worker_. A uWSGI worker now sends the `insert` or `update` query to the database, and go on its merry way. They could not care less if the write actually succeeded - and for good reason: would they do much more than **write** something to the log if the write failed? Communicator can handle that. Most **Write** queries no longer bother our workers. Caring causes waiting on a write before doing something else, and requires adding a flag to the query when sent to Communicator.
+One way we made [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) optimize queries is to perform all **write** queries _without replying to the worker_. Application workers send the `insert` or `update` query to the database, and go on their merry way. They could not care less if the write query actually succeeded - and for good reason: would they do much more than **write** something to the log if the query failed? Communicator can handle that. Most **Write** queries no longer bother our workers. Caring causes waiting on a query before doing something else, and requires adding a flag to the query when sent to Communicator.
 
 But you always wait for **read** queries.
 
@@ -28,7 +28,7 @@ Code that needs the queried data can be moved to a thread, waiting on the query 
 
 Splitting the queries into threads requires a bit of work - most of it is finding queries that fit this use case in the code and where they need to _join_ back to the main thread meaning the optimization comes with a hefty cost of complexity. Used incorrectly, the worker can actually end up actually waiting more - it is up to the developer to find the correct use cases. This makes threads an optimal choice for very specific use cases - such as code that draws a lot of different data sets completely foreign to one another for different uses.
 
-Not only does the threading solution has a chance of not optimizing the worker run time, threads add a not-so-hidden cost of [_context switching_](https://en.wikipedia.org/wiki/Context_switch), which might eliminate any potential performance benefit; in addition, every time you add a thread the eternal headache of locking mechanisms is right around the corner. This is why - as a generic solution - threading does not fit well. More importantly working with Lua - especially in the uWSGI context - **does not allow for threading** at all. Everything must happen in the same thread or in some other process (well, like Communicator).
+Not only does the threading solution has a chance of not optimizing the worker run time, threads add a not-so-hidden cost of [_context switching_](https://en.wikipedia.org/wiki/Context_switch), which might eliminate any potential performance benefit; in addition, every time you add a thread the eternal headache of locking mechanisms is right around the corner. This is why - as a generic solution - threading does not fit well. More importantly our codebase  **does not allow for threading** at all. Everything must happen in the same thread or in some other process (well, like Communicator).
 
 Luckily, there is more than one solution to optimizing query wait time. Lets go back to the drawing board.
 
@@ -61,7 +61,6 @@ Combining coroutines with grouped queries can gain much of the performance lost 
 According to the diagram above grouping with coroutines might be worse than the threading example, but in most use cases (including ours) most worker code will run in _nanoseconds_ where any query will take _microseconds_ - meaning the worker (orange) parts are thousands of times smaller than any query (red/blue) parts. In practice, grouping allows for similar or better performance than threading in _most_ cases.
 Disproving this last statement is left as an exercise for the reader.
 
-<!-- todo: better subtitle -->
 ## Making Queries Great Again
 Query Grouping is name of the interface we created that wraps everything together. We can turn the functions containing the queries to coroutines, and we can manage the coroutines to resume when their query completes. The only thing left is to force queries to `yield` if they are trying to query in a Query Grouping context, and voila! We can shave several milliseconds from any request involving the database, which is all of them.
 
