@@ -5,12 +5,15 @@ categories: ["Devlog", "Lua", "Communicator"]
 tags: [backend, database, cassandra, lua, threading, coroutines, async]
 ---
 
+# Queries in a Pinch
+
+Hi, dear reader. I wrote this post is about an improvement in our code that was used to speed up our response times by changing how application workers wait for queries. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we refactored our code - including some samples. It is quite in-depth and technical, which I try to avoid to keep posts open to larger audiences. I provided additional links to encase more information - there is only so much one post can discuss - should you decide to go further down the rabbit hole.
+Enjoy!
+
 ## More Equal Than Others
 Database queries are not created equal - some are short and simple, some are long, arduous and complicated. Some take an insignificant amount of time and some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans, a lazy network card or some mumbo jumbo about [tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time. While the query is executing, an application worker is waiting. A waiting worker is a waiting customer. A waiting customer might prefer a quicker API. If a request takes enough time, customers can decide to search for a faster solution. A few milliseconds can cost millions of dollars.
 
 A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a _millisecond_ can mean _millions_ of wasted instruction cycles on a modern processor, and query wait times can add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
-
-This post is about an improvement in our code that was used to speed up our response times by changing how workers wait on queries. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we refactored our code - including some samples. It is quite technical, which I usually try to avoid to keep post open to larger audiences. I provided additional links to encase more information - there is only so much one post can discuss - should you decide to go further down the rabbit hole.
 
 ## Frankly, my darling, I don't give a _query_
 One way we made [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) optimize queries is to perform all **write** queries _without replying to the worker_. Application workers send the `insert` or `update` query to the Communicator, and go on their merry way. In most cases, they could not care less if the write query actually succeeded - and for good reason: would they do much more than **write** something to the log and send a metric if the query failed? Communicator can handle that. Most **Write** queries would not block our workers - they do not and should not care about the result. Caring equals waiting on a query before doing something else. In cases when that caring is needed the option exists.
