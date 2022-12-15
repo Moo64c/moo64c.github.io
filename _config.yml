@@ -48,10 +48,10 @@ twitter:
   username               : moo64c
 
 analytics:
-  provider               : "google" # false (default), "google", "google-universal", "google-gtag", "custom"
+  provider               : "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
   google:
     tracking_id          : "G-PV8K0S2JHK"
-    anonymize_ip         :  true # false (default)
+    anonymize_ip         : false
 
 
 # Site Footer
