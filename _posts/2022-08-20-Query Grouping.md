@@ -5,12 +5,12 @@ categories: ["Devlog", "Lua", "Communicator"]
 tags: [backend, database, cassandra, lua, threading, coroutines, async]
 ---
 
-## ... More Equal Than Others
-Database queries are not created equal - some are short and simple, some are long, arduous and complicated. Some take an insignificant amount of time and some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans, a lazy network card or some mumbo jumbo about [tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time. While the query is executing, an application worker is waiting. A waiting worker is waiting customer. A waiting customer might prefer a quicker API. If a request takes over a few hundred milliseconds, a customer might decide to start scouting for a faster solution. Few milliseconds can cost millions in lost contracts.
+## More Equal Than Others
+Database queries are not created equal - some are short and simple, some are long, arduous and complicated. Some take an insignificant amount of time and some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans, a lazy network card or some mumbo jumbo about [tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time. While the query is executing, an application worker is waiting. A waiting worker is a waiting customer. A waiting customer might prefer a quicker API. If a request enough time, customers might decide to start scouting for a faster solution. A few milliseconds can cost millions of dollars.
 
-A waiting worker is also a waste, computers are generally quite fast - waiting for a millisecond equals around 3 million wasted instruction cycles on a modern CPU. These query wait times add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
+A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a millisecond means around 3 million wasted instruction cycles on a modern processor, and query wait times can add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
 
-This post is about an improvement in our code that was used to speed up our response times by improving how workers wait on queries. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we improved our code, as well as some code samples.
+This post is about an improvement in our code that was used to speed up our response times by improving how workers wait on queries. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we improved our code, as well as some code samples. It is quite technical, which I usually try to avoid. I provided additional links to encase more information - there is only so much one post can discuss.
 
 ## Frankly, my darling, I don't give a _query_
 One way we made [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) optimize queries is to perform all **write** queries _without replying to the worker_. Application workers send the `insert` or `update` query to the database, and go on their merry way. They could not care less if the write query actually succeeded - and for good reason: would they do much more than **write** something to the log if the query failed? Communicator can handle that. Most **Write** queries would not block our workers - they do not and should not care about the result. Caring equals waiting on a query before doing something else, and requires adding a flag to the query when sent to Communicator.
@@ -21,7 +21,7 @@ But you always care when reading from the database. Our workers will always wait
 
 Or is there?
 
-## When in Doubt, Add a Thread
+## In Threads We Trust
 Asynchronous (aka async) queries allow for a lot of flexibility when optimizing. One way to enjoy the async performance benefit for read queries is to add a thread per query to wait on its reply. Threading will work well under the assumption at a given point in the code that requires some data from the database, there is a following piece of code that does not require that data at all. Simply: put the task in some thread's capable hands to fetch and process the data, and the worker itself (main thread) can do some other task in the meantime - such as starting more queries. The limit on concurrent threads is how much the processor can handle - running thousands of them at the same time is theoretically possible. When you run out of code to run without the queried data, the main worker thread will have to block until all query threads finish (aka _join_ back to the main thread).
 
 ![Sending queries into their own threads and joining the main thread later.](../assets/images/2022-08-20-Query%20Grouping/threading.png)
