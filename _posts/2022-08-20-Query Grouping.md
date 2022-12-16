@@ -22,8 +22,6 @@ A waiting customer is an unhappy customer.
 
 An unhappy customer is a customer that leaves.
 
-#### That is how a few milliseconds can end up costing a company millions of dollars.
-
 A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a _millisecond_ can mean _millions_ of wasted instruction cycles on a modern processor, and query wait times can add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
 
 ## Frankly, my darling, I don't give a _query_
