@@ -7,7 +7,7 @@ tags: [backend, database, cassandra, lua, threading, coroutines, async]
 
 # Queries in a Pinch
 
-This post is about a code optimization that speeds up response times by changing how application workers wait for query execution. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we refactored our code - including some samples. That sounds quite in-depth and technical, and it is. I provided additional links to encase more information (there is only so much one post can discuss) should you decide to go further down the rabbit hole.
+This post is about a code optimization that speeds up response times by changing how application workers wait for query execution. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we refactored our code - including some samples. That sounds quite in-depth and technical, and it is, but I kept the code samples to the end to avoid scaring anyone off. I provided additional links to encase more information (there is only so much one post can discuss) should you decide to go further down the rabbit hole.
 
 Hope you enjoy!
 
@@ -20,7 +20,7 @@ A waiting worker is a waiting customer.
 
 A waiting customer is an unhappy customer.
 
-An unhappy customer is a customer that leaves.
+We do not want unhappy customers.
 
 A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a _millisecond_ can mean _millions_ of wasted instruction cycles on a modern processor. Query wait times can add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
 
@@ -81,7 +81,7 @@ A new `query_grouping` interface was built to wrap everything discussed here tog
 In practice, we saw an overall improvement in performance after implementing Query Grouping in specific API calls. It is implemented only for Cassandra through Communicator with plans for expansion, but that might take a while. `query_grouping` also forces developers to name the groups, allowing us to expose configuration to turn a specific query group back to "non-grouped" flow if a problem is detected.
 
 ### Fresh Samples - How does Query Grouping look like?
-Let's say we have the functions `notify_heroes`,`notify_villans` which have some side effect but do not directly affect each other. Each of the functions contains two queries and does something with their result. These functions run one after the other:
+Let's say we have the functions `notify_heroes`,`notify_villans` which have some side effect (`notify(...)`) but do not directly affect each other. Each of the functions contains two queries and does something with their result. These functions run one after the other:
 
 ```lua
 function notify_heroes()
@@ -114,7 +114,7 @@ group:run()
 ```
 That's it; added callbacks turn automatically into coroutines and `group:run()` runs them, blocking until all coroutines entered a `dead` state (ended). Each function has two queries, four queries will execute using just two groups of queries, Blocking **twice** instead of **four** times, with the time cost of the worst query in each group. If all queries take the same amount of time (they never do, but let us assume), we already reduced the wait time by _**half**_.
 
-> If a function does not query the database, it will never reach a `yield` call, meaning it will run until it is finished. This marks the coroutine as `dead`.
+> If a function does not query the database, it will never reach a `yield` call, meaning it will run until it is finished. This marks the coroutine as `dead` after one `resume` call.
 
 ### The Crème De La Crème:
 `notify_heroes` runs two queries which we can assume do not affect one another, and the same could be said for `notify_villans`'s queries. After we grouped `notify_heroes` and `notify_villans`, we block twice for two groups of queries: first group has `query_turtles` and `query_automobile`, and the second group of queries includes `query_ninjas` and `query_main_villan`.
@@ -161,7 +161,7 @@ group:add(notify_villans)
 
 group:run()
 ```
-When we are calling `group:run()` for the `"heroes"` group inside `notify_heroes` we actually cause a nifty hand off in control flow behind the scenes - `notify_heroes` is added to `"notify"` group, it means we already called `group:run()` for the `"notify"` group. `query_grouping` lets the `"notify"` group continue its run once the `"heroes"` group's coroutines `yield`, and that lets the `"villans"` group do its thing inside `notify_villans`. Once that finishes, the control returns to `"notify"`, which detects it is out of coroutines to run, and actually sends the group of queries in all of this back and forth, which means the `"notify"` group actually behaves as if the coroutines in `notify_heroes` or `notify_villans` are its own, allowing it to share **_one actual grouped request_** of queries to Communicator.
+The `"notify"` group starts by running `notify_heroes` as a coroutine. It creates the `"heroes"` group and runs it. `"heroes"` group runs the `query_turtles` and the `query_ninjas` coroutines, both adding a query to the grouped request and yielding. The `"heroes"` group then _returns the control back_ to the `"notify"` group, allowing `notify_villans` to do the same with the `"villans"` group and its two coroutines. Once `"villans"` completes, control is once again at the `"notify"` group's hands, and having no more coroutines to run in that cycle, the grouped request is sent, waiting on the reply.
 
 All this means that **executing all four** queries would block only **once**, essentially reducing the wait time to the minimum of the longest query in the group.  If all queries take the same amount of time, we reduced the wait time to **one fourth** of the original.
 
