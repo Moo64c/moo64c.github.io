@@ -103,7 +103,7 @@ notify_villans()
 ```
 In the original code each function would run, query the database twice - making the worker wait on each request - and does something with the results. The fully synchronous case has the most wait time for the worker which would wait **_four_** times.
 
-As the functions and their result do not affect one another, they can all run in one query group. To do so we just need to create a group, add the functions, and run it:
+As the functions and their result do not affect one another, they can all run in a query group. To do so we just need to create a group, add the functions, and run it:
 ```lua
 local group = query_grouping.new_routines_group("notify")
 
@@ -112,7 +112,7 @@ group:add(notify_villans)
 
 group:run()
 ```
-That's it; added callbacks turn automatically into coroutines and `group:run()` blocks until all coroutines entered a `dead` state (ended). Each function has two queries, four queries will execute using just two groups of queries, Blocking **twice** instead of **four** times, with the time cost of the worst query in each group. If all queries take the same amount of time, we already reduced the wait time by _**half**_.
+That's it; added callbacks turn automatically into coroutines and `group:run()` runs them, blocking until all coroutines entered a `dead` state (ended). Each function has two queries, four queries will execute using just two groups of queries, Blocking **twice** instead of **four** times, with the time cost of the worst query in each group. If all queries take the same amount of time (they never do, but let us assume), we already reduced the wait time by _**half**_.
 
 > If a function does not query the database, it will never reach a `yield` call, meaning it will run until it is finished. This marks the coroutine as `dead`.
 
@@ -163,7 +163,7 @@ group:run()
 ```
 When we are calling `group:run()` for the `"heroes"` group inside `notify_heroes` we actually cause a nifty hand off in control flow behind the scenes - `notify_heroes` is added to `"notify"` group, it means we already called `group:run()` for the `"notify"` group. `query_grouping` lets the `"notify"` group continue its run once the `"heroes"` group's coroutines `yield`, and that lets the `"villans"` group do its thing inside `notify_villans`. Once that finishes, the control returns to `"notify"`, which detects it is out of coroutines to run, and actually sends the group of queries in all of this back and forth, which means the `"notify"` group actually behaves as if the coroutines in `notify_heroes` or `notify_villans` are its own, allowing it to share **_one actual grouped request_** of queries to Communicator.
 
-All this means that **executing all four** queries would block only **once**, essentially reducing the wait time to the minimum of the longest query in the group. In case all queries take the same amount of time (they never do, but let us assume), we reduced the wait time to **one fourth** of the original.
+All this means that **executing all four** queries would block only **once**, essentially reducing the wait time to the minimum of the longest query in the group.  If all queries take the same amount of time, we reduced the wait time to **one fourth** of the original.
 
 There is no limit to nesting groups vertically or horizontally - `notify_heroes` could have additional nesting if there were more queries inside it, and `notify_villans` or any other nested function could also nest its own groups and subgroups. You can have a group run right after a different one. You can stash callbacks to run whenever you would like, and nobody could stop you.
 
