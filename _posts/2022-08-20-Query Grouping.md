@@ -13,9 +13,13 @@ Hope you enjoy!
 
 ## More Equal Than Others
 Database queries are not created equal - some are short and simple, some are long, arduous and complicated. Some take an insignificant amount of time and some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans, a lazy network card or some mumbo jumbo about [tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time.
+
 While a query is executing, an application worker is waiting.
+
 A waiting worker is a waiting customer.
+
 A waiting customer might prefer a quicker API.
+
 If a request takes enough time, customers can decide to search for a faster solution.
 
 A few milliseconds can end up costing a company millions of dollars.
