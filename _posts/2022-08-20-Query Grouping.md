@@ -81,14 +81,16 @@ A new `query_grouping` interface was built to wrap everything discussed here tog
 In practice, we saw an overall improvement in performance after implementing Query Grouping in specific API calls. It is implemented only for Cassandra through Communicator with plans for expansion, but that might take a while. `query_grouping` also forces developers to name the groups, allowing us to expose configuration to turn a specific query group back to "non-grouped" flow if a problem is detected.
 
 ### Fresh Samples - How does Query Grouping look like?
-Let's say we have the functions `notify_heroes`,`notify_villans` which have some side effect (`notify(...)`) but do not directly affect each other. Each of the functions contains two queries and does something with their result. These functions run one after the other:
+Let's say we have the functions `notify_heroes`,`notify_villans` which have some side effect (`notify(...)`) but do not directly affect each other. Each of the functions contains queries (functions prefixed with `query_` read from the database) and does something with their result. These functions run one after the other:
 
 ```lua
 function notify_heroes()
   local turtles = query_turtles()
   local ninjas = query_ninjas()
 
-  notify(filter_teenage_mutant(ninjas, turtles))
+  for _, ninja in ninjas do
+    notify(filter("teenage", "mutant", ninja, turtles))
+  end
 end
 
 function notify_villans()
@@ -101,7 +103,7 @@ end
 notify_heroes()
 notify_villans()
 ```
-In the original code each function would run, query the database twice - making the worker wait on each request - and does something with the results. The fully synchronous case has the most wait time for the worker which would wait **_four_** times.
+In this code each function would run, query the database twice - making the worker wait on each request - and do something with the results. This somewhat simple case has four queries - each time waiting and immediately sending off another query and waiting again.
 
 As the functions and their result do not affect one another, they can all run in a query group. To do so we just need to create a group, add the functions, and run it:
 ```lua
@@ -119,7 +121,7 @@ That's it; added callbacks turn automatically into coroutines and `group:run()` 
 ### The Crème De La Crème:
 `notify_heroes` runs two queries which we can assume do not affect one another, and the same could be said for `notify_villans`'s queries. After we grouped `notify_heroes` and `notify_villans`, we block twice for two groups of queries: first group has `query_turtles` and `query_automobile`, and the second group of queries includes `query_ninjas` and `query_main_villan`.
 
-We can do better: create a _nested_ query group inside `notify_heroes` and another one inside `notify_villans`. Yes, you can create **more groups** inside a running group! This allows `query_grouping` to flatten any _nested_ queries to run in one group, meaning waiting once - regardless of nesting depth and amount of queries. The new code would look like this:
+We can do better: create a _nested_ query group inside `notify_heroes` and another one inside `notify_villans`. Yes, you can create **more groups** inside a running group! This allows `query_grouping` to flatten any _nested_ queries to run in one group, meaning waiting once - regardless of nesting depth and amount of queries:
 
 ```lua
 function notify_heroes()
@@ -135,7 +137,9 @@ function notify_heroes()
   end)
   group:run()
 
-  notify(filter_teenage_mutant(ninjas, turtles))
+  for _, ninja in ninjas do
+    notify(filter("teenage", "mutant", ninja, turtles))
+  end
 end
 
 function notify_villans()
@@ -153,13 +157,6 @@ function notify_villans()
 
   notify(shredder, is_sinking(technodrome))
 end
-
-local group = query_grouping.new_routines_group("notify")
-
-group:add(notify_heroes)
-group:add(notify_villans)
-
-group:run()
 ```
 The `"notify"` group starts by running `notify_heroes` as a coroutine. It creates the `"heroes"` group and runs it. `"heroes"` group runs the `query_turtles` and the `query_ninjas` coroutines, both adding a query to the grouped request and yielding. The `"heroes"` group then _returns the control back_ to the `"notify"` group, allowing `notify_villans` to do the same with the `"villans"` group and its two coroutines. Once `"villans"` completes, control is once again at the `"notify"` group's hands, and having no more coroutines to run in that cycle, the grouped request is sent, waiting on the reply.
 
