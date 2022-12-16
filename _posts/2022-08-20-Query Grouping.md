@@ -7,34 +7,38 @@ tags: [backend, database, cassandra, lua, threading, coroutines, async]
 
 # Queries in a Pinch
 
-This post is about a code optimization that speeds up response times by changing how application workers wait for query execution. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we refactored our code - including some samples. That sounds quite in-depth and technical, and it is, but I kept the code samples to the end to avoid scaring anyone off. I provided additional links to encase more information (there is only so much one post can discuss) should you decide to go further down the rabbit hole.
+This post is about an optimization to response times acquired by changing how application workers wait for query execution. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we refactored our code - including some samples. That sounds quite in-depth and technical, and although I kept the code samples to the end to avoid scaring anyone off, it does presume some prior knowledge. I provided additional links to encase more information (there is only so much one post can discuss) should you decide to go further down the rabbit hole.
 
 Hope you enjoy!
 
 ## More Equal Than Others
-Database queries are not created equal - some are short and simple, some are long, arduous and complicated. Some take an insignificant amount of time and some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans, a lazy network card or some mumbo jumbo about [tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc). All of them take _some_ amount of time.
+Database queries are not created equal - some are short and simple, some are long, arduous and complicated. Some take an insignificant amount of time and some make our DBA team cry at night. Some are just unlucky and need to wait for some DNS shenanigans, a lazy network card or some mumbo jumbo about [tombstones in SSTables](https://medium.com/walmartglobaltech/tombstones-in-apache-cassandra-d0a068a72dcc).
+But all of them take _some_ amount of time.
 
-While a query is executing, an application worker is waiting.
+And while a query is executing, an application worker is waiting.
 
 A waiting worker is a waiting customer.
 
 A waiting customer is an unhappy customer.
 
-We do not want unhappy customers.
+Nobody wants unhappy customers.
 
-A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a _millisecond_ can mean _millions_ of wasted instruction cycles on a modern processor. Query wait times can add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
+A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a _millisecond_ can mean millions of _wasted_ instruction cycles on a modern processor. Expanding a classic programming metaphor: from the perspective of a processor, if fetching from memory is similar to driving to the local store and back, and fetching from disks is similar to flying back and forth to the moon - then a call to a database could be analogous to looking for life in another galaxy (and coming back to tell about it).
+
+Metaphors aside, these wait times add up _really, really_ fast. We need to optimize this, and we need it yesterday.
 
 ## Frankly, my darling, I don't give a _query_
-[Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) already optimize workers' wait time; all **write** queries are performed _without replying to the worker_. Application workers send the `insert` or `update` query to the Communicator, and go on their merry way. In most cases, they do not care if the write query actually succeeded; would they do much more than write something to a log and send a metric if the query failed? Communicator can handle that. Caring about the result equals waiting on a query before doing anything else.
 
-But you always care when reading from the database. Our workers will always wait on **_read_** queries.
+Database queries can be generally split into read queries (`select`) and write queries (`insert, update, delete`). Our client for [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) already optimize workers' wait time; all **write** queries are performed _without replying_ to the worker. An application worker can send the write query to Communicator, and go on their merry way. In most cases, they do not care if the write query actually succeeded; would they do much more than write something to a log and send a metric if the query failed? Communicator can handle that. Needlessly waiting on a query before doing anything else is just another waste.
 
-**Read** queries produce data, and the worker needs to use the data for something - logic, additional queries or sent elsewhere, maybe just verify that it exists. We can not avoid waiting for the query before doing something with the data before we could carry on.
+But you always care when **reading** from the database.
 
-Or is there?
+**Read** queries produce data which the worker uses for something - logic, additional queries or sent elsewhere, maybe just verify that it exists. We must stop everything and wait on a query and do something with the data before we could carry on.
+
+Must we?
 
 ## In Threads We Trust
-Asynchronous (aka async) queries allow for a lot of flexibility when optimizing. One way to enjoy the async performance benefit for read queries is to add a [thread](https://stackoverflow.com/a/5201906) per query to wait on its reply. Threading will work well under the assumption at some point A in the code which requires some data from the database, there is a point B of code that does not require that data at all. Simply: break the flow to tasks. Put each task in some thread's capable hands to fetch and process the data, and the worker itself (main thread) can do other tasks in the meantime - processing data or starting more queries and threads. The limit on concurrent threads is how much the processor can handle - running thousands of them at the same time is theoretically possible. When you run out of code to run without the queried data, the main worker thread will have to block until all query threads finish (aka _join_ back to the main thread).
+One way to enjoy a performance benefit for read queries is to add a [thread](https://stackoverflow.com/a/5201906) per query to wait on its reply. Threading will work well under the assumption at some point A in the code which requires some data from the database, there is a point B of code that does not require that data at all. Simply: break the flow to tasks. Put each task in a new thread's capable hands to fetch and process the data, and the worker itself (main thread) can do other tasks in the meantime, like starting more queries and threads. The limit on concurrent threads is how much the processor can handle. When you run out of code to run without the queried data, the main worker thread will have to block until all query threads finish (aka _join_ back to the main thread).
 
 ![Sending queries into their own threads and joining the main thread later.](../assets/images/2022-08-20-Query%20Grouping/threading.png)
 
