@@ -173,7 +173,7 @@ The only obvious limits to use `query_grouping` is that the callbacks added do n
 ## It's Time to Stop
 The `query_grouping` implementation suggests that we do not necessarily need to group the queries - at the `group:add(...)` stage, the request can go to Communicator and start doing its thing, shaving additional precious time and actually matching the threaded behavior in the diagram above. It is true - you can send the request and collect it later, but it would require a rewrite of the Communicator client code on our side which seems unlikely considering the potential benefits are slim compared to the benefit we can attain from simply sending everything as a group. The [80-20 rule](https://en.wikipedia.org/wiki/Pareto_principle) applies here; for an additional "20%" performance benefit the engineering cost would be quite high and prone to bugs.
 
-That is it, thanks for reading!
+Thanks for reading!
 
 This blog will be posted on my [personal blog](#) and the [Trusteer Engineering](#) blog.
 
