@@ -48,10 +48,10 @@ twitter:
   username               : moo64c
 
 analytics:
-  provider               : "google" # false (default), "google", "google-universal", "google-gtag", "custom"
+  provider               : "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
   google:
-    tracking_id          : "UA-53687263-1"
-    anonymize_ip         :  true # false (default)
+    tracking_id          : "G-PV8K0S2JHK"
+    anonymize_ip         : false
 
 
 # Site Footer
@@ -188,6 +188,19 @@ compress_html:
 #       - Clojure
 #       - Meta
 
+repository: "moo64c/moo64c.github.io"
+comments:
+  provider: "giscus"
+  giscus:
+    repo:                "moo64c/moo64c.github.io"
+    repo-id:             "MDEwOlJlcG9zaXRvcnkxNDA1OTkwMTE="
+    category:            "Comments"
+    category-id:         "DIC_kwDOCGFe484CTGTG"
+    mapping:             "pathname"
+    reactions-enabled:    "1"
+    theme:               "preferred_color_scheme"
+    crossorigin:         "anonymous"
+
 # Defaults
 defaults:
   # _posts
@@ -198,7 +211,7 @@ defaults:
       layout: single
       author_profile: true
       read_time: true
-      comments: # true
+      comments: true
       share: true
       related: true
   # _pages
