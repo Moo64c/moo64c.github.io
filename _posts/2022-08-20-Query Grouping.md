@@ -160,11 +160,12 @@ group:add(notify_heroes)
 group:add(notify_villans)
 
 group:run()
-end
 ```
-Since `notify_heroes` is already added to `"notify"` group, if we are inside `notify_heroes` means we are already running inside the `"notify"` group. Calling `group:run()` for the `"heroes"` group causes a nifty hand off in control flow behind the scenes, continuing the `"notify"` group run, which now controls children groups `"heroes"` and `"villans"`. The `"notify"` group actually behaves as if the coroutines in `notify_heroes` or `notify_villans` are its own, allowing it to share *one actual grouped request* of queries to Communicator.
+When we are calling `group:run()` for the `"heroes"` group inside `notify_heroes` we actually cause a nifty hand off in control flow behind the scenes - `notify_heroes` is added to `"notify"` group, it means we already called `group:run()` for the `"notify"` group. `query_grouping` lets the `"notify"` group continue its run once the `"heroes"` group's coroutines `yield`, and that lets the `"villans"` group do its thing inside `notify_villans`. Once that finishes, the control returns to `"notify"`, which detects it is out of coroutines to run, and actually sends the group of queries in all of this back and forth, which means the `"notify"` group actually behaves as if the coroutines in `notify_heroes` or `notify_villans` are its own, allowing it to share **_one actual grouped request_** of queries to Communicator.
 
-All this means that **executing all four** queries would block only **once**, essentially reducing the wait time to the minimum of the longest query in the group. There is no limit to nesting groups vertically or horizontally - `notify_heroes` could have additional nesting if there were more queries inside it, and `notify_villans` or any other nested function could also nest its own groups and subgroups. You can have a group run right after a different one. You can stash callbacks to run whenever you would like, and nobody could stop you.
+All this means that **executing all four** queries would block only **once**, essentially reducing the wait time to the minimum of the longest query in the group. In case all queries take the same amount of time (they never do, but let us assume), we reduced the wait time to **one fourth** of the original.
+
+There is no limit to nesting groups vertically or horizontally - `notify_heroes` could have additional nesting if there were more queries inside it, and `notify_villans` or any other nested function could also nest its own groups and subgroups. You can have a group run right after a different one. You can stash callbacks to run whenever you would like, and nobody could stop you.
 
 > The unit test code for this is absolute bananas - tests are generating entire call trees with multiple layers of coroutines that do X amount of queries and nest groups in all directions.
 
