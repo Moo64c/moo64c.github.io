@@ -109,6 +109,8 @@ notify_villans()
 ```
 In this code each function would run, query the database twice - making the worker wait on each request - and do something with the results. This somewhat simple case has four queries - each time waiting and immediately sending off another query and waiting again.
 
+![Common flow with multiple independent queries.](../assets/images/2022-08-20-Query%20Grouping/notify_flow_1.png)
+
 As the functions and their result do not affect one another, they can all run in a query group. To do so we just need to create a group, add the functions, and run it:
 ```lua
 local group = query_grouping.new_routines_group("notify")
