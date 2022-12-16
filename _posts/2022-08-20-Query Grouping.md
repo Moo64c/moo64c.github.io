@@ -22,10 +22,10 @@ A waiting customer is an unhappy customer.
 
 An unhappy customer is a customer that leaves.
 
-A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a _millisecond_ can mean _millions_ of wasted instruction cycles on a modern processor, and query wait times can add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
+A waiting worker is also a waste - computers are generally quite fast these days. Waiting for a _millisecond_ can mean _millions_ of wasted instruction cycles on a modern processor. Query wait times can add up _really, really_ fast. We needed to optimize this wait time, and we needed it yesterday.
 
 ## Frankly, my darling, I don't give a _query_
-One way we made [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) optimize queries is to perform all **write** queries _without replying to the worker_. Application workers send the `insert` or `update` query to the Communicator, and go on their merry way. In most cases, they could not care less if the write query actually succeeded - and for good reason: would they do much more than **write** something to the log and send a metric if the query failed? Communicator can handle that. Most **Write** queries would not block our workers - they do not and should not care about the result. Caring equals waiting on a query before doing something else. In cases when that caring is needed the option exists.
+[Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) already optimize workers' wait time; all **write** queries are performed _without replying to the worker_. Application workers send the `insert` or `update` query to the Communicator, and go on their merry way. In most cases, they do not care if the write query actually succeeded; would they do much more than write something to a log and send a metric if the query failed? Communicator can handle that. Caring about the result equals waiting on a query before doing anything else. In cases when that caring is needed the option exists in the client.
 
 But you always care when reading from the database. Our workers will always wait on **_read_** queries.
 
