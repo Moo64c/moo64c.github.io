@@ -20,7 +20,7 @@ A waiting worker is a waiting customer.
 
 A waiting customer is an unhappy customer.
 
-If a request takes enough time, a customer can decide to use this waiting time to search for a faster solution.
+An unhappy customer is a customer that leaves.
 
 #### That is how a few milliseconds can end up costing a company millions of dollars.
 
