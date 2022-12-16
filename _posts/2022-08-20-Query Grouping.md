@@ -18,9 +18,9 @@ While a query is executing, an application worker is waiting.
 
 A waiting worker is a waiting customer.
 
-A waiting customer might prefer a quicker API.
+A waiting customer is an unhappy customer.
 
-If a request takes enough time, customers can decide to search for a faster solution.
+If a request takes enough time, a customer can decide to use this waiting time to search for a faster solution.
 
 #### That is how a few milliseconds can end up costing a company millions of dollars.
 
