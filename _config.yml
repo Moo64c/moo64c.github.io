@@ -1,7 +1,7 @@
 markdown: kramdown
 
 title: "Regularly Irrelevant"
-subtitle: "A guy trying to communicate to a computer"
+subtitle: "Trying to communicate to a computer"
 description: "Amir's personal blog"
 bio: "Programmer who sometimes photographs birds."
 
@@ -16,7 +16,7 @@ author:
   #     icon: "fas fa-fw fa-envelope-square"
   #     url: "mailto:your.name@email.com"
 
-url: "https://moo64c.github.io"
+url: "https://moo64c.github.io/about"
 
 permalink: "articles/:year/:month/:day/:title/"
 paginate: 8
@@ -36,6 +36,7 @@ plugins:
   - jekyll-redirect-from
 
 remote_theme             : "mmistakes/minimal-mistakes"
+minimal_mistakes_skin    : "neon"
 
 words_per_minute         : 200
 atom_feed:
@@ -198,7 +199,7 @@ comments:
     category-id:         "DIC_kwDOCGFe484CTGTG"
     mapping:             "pathname"
     reactions-enabled:    "1"
-    theme:               "preferred_color_scheme"
+    theme:               "dark_high_contrast"
     crossorigin:         "anonymous"
 
 # Defaults
@@ -215,6 +216,11 @@ defaults:
       share: true
       related: true
       excerpt_separator: <!--more-->
+      show_date: true
+      toc: true
+      toc_label: "Quick Navigation"
+      toc_icon: "map"
+      toc_sticky: true
   # _pages
   - scope:
       path: ""
