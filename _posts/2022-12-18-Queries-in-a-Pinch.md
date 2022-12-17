@@ -183,9 +183,11 @@ The only obvious limits to use `query_grouping` is that the callbacks added do n
 ## It's Time to Stop
 The `query_grouping` implementation suggests that we do not necessarily need to group the queries - at the `group:add(...)` stage, the request can go to Communicator and start doing its thing, shaving additional precious time and actually matching the threaded behavior in the diagram above. It is true - you can send the request and collect it later, but it would require a rewrite of the Communicator client code on our side which seems unlikely considering the potential benefits are slim compared to the benefit we can attain from simply sending everything as a group. The [80-20 rule](https://en.wikipedia.org/wiki/Pareto_principle) applies here; for an additional "20%" performance benefit the engineering cost would be quite high and prone to bugs.
 
+That is it for this (3000+ words) post. We tackled a common optimization issue (waiting on I/O) with an approach that fits an existing code base. We gained performance in multiple flows easily, and adding as little complexity as possible, And we made a pretty awesome interface to handle everything. Hope you enjoyed!
+
 Thanks for reading!
 
-This blog will be posted on my [personal blog](#) and the [Trusteer Engineering](#) blog.
+This blog will be posted on my [personal blog](https://moo64c.github.io/articles/2022/12/18/Queries-in-a-Pinch) and the [Trusteer Engineering](#) blog.
 
 ## Credits
 Query Grouping was created, designed and supported by Nir Nahum, Adi Meiman and Amir Arbel from Pinpoint R&D Team. Teenage Mutant Ninja Turtles is owned by Nickelodeon.
