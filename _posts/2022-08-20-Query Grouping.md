@@ -168,9 +168,9 @@ end
 ```
 The `"notify"` group starts by running `notify_heroes` as a coroutine. It creates the `"heroes"` group and runs it. `"heroes"` group runs the `query_turtles` and the `query_ninjas` coroutines, both adding a query to the grouped request and yielding. The `"heroes"` group then _returns the control back_ to the `"notify"` group, allowing `notify_villains` to do the same with the `"villains"` group and its two coroutines. Once `"villains"` completes, control is once again at the `"notify"` group's hands, and having no more coroutines to run in that cycle, the grouped request is sent, waiting on the reply.
 
-![Same flow with nested query grouping.](../assets/images/2022-08-20-Query%20Grouping/notify_flow_3.png)
-
 All this means that **executing all four** queries would block only **once**, essentially reducing the wait time to the minimum of the longest query in the group.  If all queries take the same amount of time, we reduced the wait time to **one fourth** of the original.
+
+![Same flow with nested query grouping.](../assets/images/2022-08-20-Query%20Grouping/notify_flow_3.png)
 
 There is no limit to nesting groups vertically or horizontally - `notify_heroes` could have additional nesting if there were more queries inside it, and `notify_villains` or any other nested function could also nest its own groups and subgroups. You can have a group run right after a different one. You can stash callbacks to run whenever you would like, and nobody could stop you.
 
