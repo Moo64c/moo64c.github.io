@@ -199,7 +199,7 @@ comments:
     category-id:         "DIC_kwDOCGFe484CTGTG"
     mapping:             "pathname"
     reactions-enabled:    "1"
-    theme:               "light_high_contrast"
+    theme:               "dark_high_contrast"
     crossorigin:         "anonymous"
 
 # Defaults
@@ -219,7 +219,7 @@ defaults:
       toc: true
       toc_label: "Quick Navigation"
       toc_icon: "map"
-      toc_sticky: false
+      toc_sticky: true
   # _pages
   - scope:
       path: ""
