@@ -120,9 +120,10 @@ group:add(notify_villains)
 
 group:run()
 ```
-That's it; added callbacks turn automatically into coroutines and `group:run()` runs them, blocking until all coroutines entered a `dead` state (ended). Each function has two queries, four queries will execute using just two groups of queries, Blocking **twice** instead of **four** times, with the time cost of the worst query in each group. If all queries take the same amount of time (they never do, but let us assume), we already reduced the wait time by _**half**_.
+Added callbacks turn automatically into coroutines and `group:run()` runs them, blocking until all coroutines entered a `dead` state (function return or error). Since each function has two queries, each would yield twice - and four queries will execute using just two groups of queries. This would block **twice** instead of **four** times, with the time cost of the worst query in each group. If all queries take the same amount of time (they never do, but let us assume), we already reduced the worker wait time by _**half**_.
 
-![Common flow with multiple independent queries.](../assets/images/2022-08-20-Query%20Grouping/notify_flow_2.png)
+![Same flow with a single query group.](../assets/images/2022-08-20-Query%20Grouping/notify_flow_2.png)
+
 > If a function does not query the database, it will never reach a `yield` call, meaning it will run until it is finished. This marks the coroutine as `dead` after one `resume` call.
 
 ### The Crème De La Crème:
@@ -166,6 +167,8 @@ function notify_villains()
 end
 ```
 The `"notify"` group starts by running `notify_heroes` as a coroutine. It creates the `"heroes"` group and runs it. `"heroes"` group runs the `query_turtles` and the `query_ninjas` coroutines, both adding a query to the grouped request and yielding. The `"heroes"` group then _returns the control back_ to the `"notify"` group, allowing `notify_villains` to do the same with the `"villains"` group and its two coroutines. Once `"villains"` completes, control is once again at the `"notify"` group's hands, and having no more coroutines to run in that cycle, the grouped request is sent, waiting on the reply.
+
+![Same flow with nested query grouping.](../assets/images/2022-08-20-Query%20Grouping/notify_flow_3.png)
 
 All this means that **executing all four** queries would block only **once**, essentially reducing the wait time to the minimum of the longest query in the group.  If all queries take the same amount of time, we reduced the wait time to **one fourth** of the original.
 
