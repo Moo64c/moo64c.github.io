@@ -1,6 +1,5 @@
 ---
 title:  "Queries in a Pinch"
-layout: single
 categories: ["Devlog", "Lua", "Communicator"]
 tags: [backend, database, cassandra, lua, threading, coroutines, async]
 ---
@@ -25,7 +24,7 @@ A waiting worker is also a waste - computers are generally [quite fast](https://
 
 ## Frankly, my darling, I don't give a _query_
 
-Database queries can be generally split into read queries (`select`) and write queries (`insert, update, delete`). Our client for [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/) already optimize workers' wait time by defaulting **write** queries to be performed _without replying_ to the worker. An application worker can send the write query to Communicator, and go on their merry way. In most cases, they do not care if the write query actually succeeded; would they do much more than write something to a log and send a metric if the query failed? Communicator can handle that. Needlessly waiting on a query before doing anything else is wasteful.
+Database queries can be generally split into read queries (`select`) and write queries (`insert, update, delete`). Our client for [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/){: .btn .btn--success} already optimize workers' wait time by defaulting **write** queries to be performed _without replying_ to the worker. An application worker can send the write query to Communicator, and go on their merry way. In most cases, they do not care if the write query actually succeeded; would they do much more than write something to a log and send a metric if the query failed? Communicator can handle that. Needlessly waiting on a query before doing anything else is wasteful.
 
 But you always care when **reading** from the database.
 
@@ -63,6 +62,8 @@ Therefore, the question is: How can we group queries without entering a realm of
 Luckily, threads are not the only answer to doing several tasks in "parallel". A lesser known concept called [Coroutines](https://en.wikipedia.org/wiki/Coroutine) allows single-thread "threading". Hopefully not diving too deeply to the technicalities, the idea is to let functions suspend while other functions do their thing for a bit before returning the first function. Putting names to this process, `Yielding` inside a running coroutine (function) allows other coroutines to `resume`, which in turn `yield` again (or end) and let the other coroutines `resume`. Explicitly - coroutines allow the worker to jump between tasks, resuming any task in the same point it left it.
 
  It does sound a bit like threading, but it all happens in a single thread. Under the hood threads actually behave in a manner very close to that description, but the [kernel](https://www.redhat.com/en/topics/linux/what-is-the-linux-kernel) handles all the `yielding` and `resuming` (and a lot more). Coroutines expose this functionality directly in user space (application side). [Lua.org](https://www.lua.org) has some [great usage examples](http://www.lua.org/pil/9.4.html) for coroutines for a more technical perspective (and how it is used in Lua), but [this talk](https://www.youtube.com/watch?v=Hi6ICEVVRiw) by Kevlin Henney might be easier to digest than a bunch of Lua code.
+
+ {% include video id="Hi6ICEVVRiw" provider="youtube" %}
 
 Coroutines can be great when waiting for input/output (I/O, i.e. reading from a socket), or when several pieces of code need to reach a similar point before running a costly action (i.e. executing a query). While the socket is waiting for more data in one coroutine, another coroutine can move on and do something else. Since I/O is handled by the kernel, there is no need to babysit it in user space (in the application worker). Coroutines do not require context switching and the kernel is not involved meaning a possible significant performance advantage over threads.
 
