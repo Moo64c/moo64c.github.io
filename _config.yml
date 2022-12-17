@@ -16,7 +16,7 @@ author:
   #     icon: "fas fa-fw fa-envelope-square"
   #     url: "mailto:your.name@email.com"
 
-url: "https://moo64c.github.io"
+url: "https://moo64c.github.io/about"
 
 permalink: "articles/:year/:month/:day/:title/"
 paginate: 8
