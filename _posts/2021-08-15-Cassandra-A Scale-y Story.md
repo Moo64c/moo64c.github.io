@@ -3,9 +3,9 @@ title:  "Cassandra: A Scale-y Story"
 layout: single
 categories: ["Devlog", "Lua", "Communicator", "Lightly technical"]
 tags: [backend, database, cassandra, epoll, lua, luajit, driver, threading]
+excerpt: Freeing database resources by reducing the amount of active connections - with a special service.
 ---
 
-Freeing database resources by reducing the amount of active connections - with a special service.
  <!--more-->
 
 ## Whose Scale is This Anyway
