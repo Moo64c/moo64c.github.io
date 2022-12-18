@@ -220,6 +220,8 @@ defaults:
       toc_label: "Quick Navigation"
       toc_icon: "map"
       toc_sticky: true
+      excerpt_separator: <!--more-->
+
   # _pages
   - scope:
       path: ""

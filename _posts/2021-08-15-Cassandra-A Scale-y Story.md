@@ -5,6 +5,9 @@ categories: ["Devlog", "Lua", "Communicator", "Lightly technical"]
 tags: [backend, database, cassandra, epoll, lua, luajit, driver, threading]
 ---
 
+Freeing database resources by reducing the amount of active connections - with a special service.
+ <!--more-->
+
 ## Whose Scale is This Anyway
 A product's scale - size of service, supported traffic and distribution reach - changes over its life cycle. At first, a company will push out a product that works. Allowing a product to scale up nicely is not easy. Code cannot always be written to fit any scale and it cannot take precedence over getting a product out (or dealing with bugs). In the meantime the product might generate higher costs, run a bit slower and have less features in order to just get it out and sell it. It is always hard to know where to stop development - investing more development time means investing more money, but you usually get more out of it. Compromises are need to be made and developers always have to keep this in mind.
 
@@ -73,8 +76,8 @@ Since application machines are usually much much cheaper than database capacity 
 
 I guess somebody in the *future* will have to do that.
 
-Thanks for reading! 
+Thanks for reading!
 
 Amir
 
-This article will be featured on the [Trusteer Engineering](https://w3.ibm.com/w3publisher/trusteer-engineering/blog) and [my personal Github](https://moo64c.github.io/) blogs. 
+This article will be featured on the [Trusteer Engineering](https://w3.ibm.com/w3publisher/trusteer-engineering/blog) and [my personal Github](https://moo64c.github.io/) blogs.
