@@ -188,8 +188,4 @@ Thanks for reading!
 
 This blog will be posted on my [personal blog](https://moo64c.github.io/articles/2022/12/18/Queries-in-a-Pinch) and the [Trusteer Engineering](#) blog.
 
-### Some Credits
- - Teenage Mutant Ninja Turtles is a trademark by VIACOM INTERNATIONAL INC..
- - Query Grouping was created, designed and supported by Nir Nahum, Adi Meiman and Amir Arbel from Pinpoint R&D Team.
-
 *[DNS] Domain Name Service
