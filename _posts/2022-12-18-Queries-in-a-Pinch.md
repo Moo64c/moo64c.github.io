@@ -182,7 +182,7 @@ Like with Communicator - a good place to stop optimizing and to ship the feature
 
 ### Conclusion
 
-That is it for this (~3000 words) post. We tackled a common optimization issue (waiting on I/O) with an approach that fits an existing code base. We gained performance in multiple flows easily, and adding as little complexity as possible, and we made a pretty awesome interface to handle everything. Hope you enjoyed!
+That is it for this (~3000 words) post. We tackled a common optimization issue (waiting on I/O) with an approach that fits an existing code base. We gained performance in multiple flows easily, adding as little complexity as possible, and we made a pretty awesome interface to handle everything. Hope you enjoyed!
 
 Thanks for reading!
 
