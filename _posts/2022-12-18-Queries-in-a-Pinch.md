@@ -21,7 +21,7 @@ Nobody wants unhappy customers.
 
 A waiting worker is also a waste - computers are generally [quite fast](https://computers-are-fast.github.io/) these days. Waiting for a _millisecond_ can mean millions of _wasted_ instruction cycles on a modern processor. These wait times add up _really, really_ fast. We need to optimize this, and we need it yesterday.
 
-## Frankly, my darling, I don't give a _query_
+## Frankly, my dear, I don't give a _query_
 
 Database queries can be generally split into read queries (`select`) and write queries (`insert`, `update` or `delete`). Our client for [Cassandra Communicator](https://moo64c.github.io/articles/2021/08/15/Cassandra-A-Scale-y-Story/){: .btn .btn--success} already optimize workers' wait time by defaulting **write** queries to be performed _without replying_ to the worker. An application worker can send the write query to Communicator, and go on their merry way. In most cases, they do not care if the write query actually succeeded; would they do much more than write something to a log and send a metric if the query failed? Communicator can handle that. Needlessly waiting on a query before doing anything else is wasteful.
 
@@ -66,7 +66,7 @@ It does sound a bit like threading, but it all happens in a single thread. Under
 
 Coroutines can be great when waiting for input/output (I/O, i.e. networking - reading from a socket), or when several pieces of code need to reach a similar point before running a costly action (i.e. executing a group of queries). Instead of waiting on a socket in one coroutine, `yield`, and another coroutine can move on and do something else. Since I/O is handled by the kernel, there is no need to babysit sockets in user space (in the application worker). Coroutines do not require _context switching_ meaning a significant performance advantage over threads.
 
-Using coroutines has some other terrific property: any piece of code can become a coroutine. Wrap existing code in a function, and it could run concurrently to other piece of code - just add a `yield` in the proper place. Coroutines never require a [mutex](https://stackoverflow.com/a/34556) on any resources since they do not run in some randomized parallel context like threads - you always know when the coroutine exits and when it resumes. There is no need to rewrite a lot of ancient database models or adjust the flow of our code; only a minimal intervention in existing code is required to make it able to get a bunch of queries into a group and execute it. There is also no need to rewrite a bunch of manual code for every use case; a general use class can be made.
+Using coroutines has some other terrific property: any piece of code can become a coroutine. Wrap existing code in a function, and it could run concurrently to other piece of code - just add a `yield` in the proper place. Coroutines never require a mutex on any resources since they do not run in some randomized parallel context like threads - you always know when the coroutine exits and when it resumes. There is no need to rewrite a lot of ancient database models or adjust the flow of our code; only a minimal intervention in existing code is required to make it able to get a bunch of queries into a group and execute it. There is also no need to rewrite a bunch of manual code for every use case; a general use class can be made.
 
 By combining coroutines with grouped queries we can reduce waiting times for our workers with little engineering hassle. Wrapping an existing block of code in a function and letting some mechanism handle when to `resume` or `yield` takes a relatively low engineering cost. We just need to create that mechanism. Each query and its following logic can be kept pretty much the same; we would only need to verify the independence of grouped queries and their following logic from one another, and old code can enjoy new performance benefits.
 
@@ -79,7 +79,7 @@ _Disproving that last statement is left as an exercise for the reader._ Have a g
 ## Making Queries Great Again
 A new `query_grouping` interface was built to wrap everything discussed here together. It turns the functions containing the queries to coroutines, `yields` when a query is sent during a `group:run()` call and manages the coroutines to `resume` when their query completes. Instead of sending the query immediately, it groups them together, sending it once all coroutines have `yielded`. With minimal additional engineering effort, `query_grouping` can shave several precious _milliseconds_ from any flow that has many queries. In a common API call it can translate to dozens of milliseconds. Dozens!
 
-<!-- todo: talk with @adi to see if we have some graphs -->
+![Group:run() flow: while coroutines are alive, resume each added coroutine; yield to add queries to a grouped query request. After resuming all once, send the grouped request, repeat.](../assets/images/2022-08-20-Query%20Grouping/run_flow.png)
 
 In practice, we saw an overall improvement in performance after implementing `query_grouping` in specific API calls. It is implemented only for Cassandra through Communicator with plans for expansion, but that might take a while.
 
