@@ -21,7 +21,11 @@ The site is hosted by [GitHub pages](github.io).
 
 The repository for the site is hosted on [GitHub](https://github.com/moo64c/moo64c.github.com).
 
-It uses [Giscus](giscus.app) for comments though the GitHub discussion feature.
+The blog uses [Giscus](giscus.app) for comments though the GitHub discussion feature.
+
+Unless mentioned otherwise, diagrams are made [Excalidraw](https://excalidraw.com/).
+
+To summarize: I dislike front end - everything on this blog (except the content itself) was made by other people. Thanks!
 
 ## License
 All original content here is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
