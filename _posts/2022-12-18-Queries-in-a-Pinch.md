@@ -187,5 +187,3 @@ That is it for this (~3000 words) post. We tackled a common optimization issue (
 Thanks for reading!
 
 This blog will be posted on my [personal blog](https://moo64c.github.io/articles/2022/12/18/Queries-in-a-Pinch) and the [Trusteer Engineering](#) blog.
-
-*[DNS] Domain Name Service
