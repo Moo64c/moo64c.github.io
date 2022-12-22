@@ -36,7 +36,7 @@ plugins:
   - jekyll-redirect-from
 
 remote_theme             : "mmistakes/minimal-mistakes"
-minimal_mistakes_skin    : "neon"
+minimal_mistakes_skin    : "dark"
 
 words_per_minute         : 200
 atom_feed:
@@ -221,6 +221,8 @@ defaults:
       toc_label: "Quick Navigation"
       toc_icon: "map"
       toc_sticky: true
+      excerpt_separator: <!--more-->
+
   # _pages
   - scope:
       path: ""

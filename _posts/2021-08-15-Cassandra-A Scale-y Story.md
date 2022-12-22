@@ -3,6 +3,7 @@ title:  "Cassandra: A Scale-y Story"
 layout: single
 categories: ["Devlog", "Lua", "Communicator", "Lightly technical"]
 tags: [backend, database, cassandra, epoll, lua, luajit, driver, threading]
+excerpt: Freeing database resources by reducing the amount of active connections - with a special service.
 ---
 
 A gaping performance hole is left intentionally behind by one developer for a future fix. This post is about being that future guy.
