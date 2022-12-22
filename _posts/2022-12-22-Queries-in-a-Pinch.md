@@ -79,8 +79,6 @@ _Disproving that last statement is left as an exercise for the reader._ Have a g
 ## Making Queries Great Again
 A new `query_grouping` interface was built to wrap everything discussed here together. It turns the functions containing the queries to coroutines, `yields` when a query is sent during a `group:run()` call and manages the coroutines to `resume` when their query completes. Instead of sending the query immediately, it groups them together, sending it once all coroutines have `yielded`. With minimal additional engineering effort, `query_grouping` can shave several precious _milliseconds_ from any flow that has many queries. In a common API call it can translate to dozens of milliseconds. Dozens!
 
-![Group:run() flow: while coroutines are alive, resume each added coroutine; yield to add queries to a grouped query request. After resuming all once, send the grouped request, repeat.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/run_flow.png?raw=true)
-
 In practice, we saw an overall improvement in performance after implementing `query_grouping` in specific API calls. It is implemented only for Cassandra through Communicator with plans for expansion, but that might take a while.
 
 ### Fresh Samples - How does Query Grouping look like?
@@ -119,6 +117,8 @@ group:add(notify_villains)
 group:run()
 ```
 Added callbacks turn automatically into coroutines and `group:run()` runs them, blocking until all coroutines entered a `dead` state (function return or error). Since each function has two queries, each would yield twice - and four queries will execute using just two groups of queries. This would block **twice** instead of **four** times, with the time cost of the worst query in each group. If all queries take the same amount of time (they never do, but let us assume), we already reduced the worker wait time by _**half**_.
+
+![Group:run() flow: while coroutines are alive, resume each added coroutine; yield to add queries to a grouped query request. After resuming all once, send the grouped request, repeat.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/run_flow.png?raw=true)
 
 > Any code that does not query the database will never reach a `yield` call, meaning it will run until the coroutine is `dead`.
 
