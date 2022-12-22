@@ -34,7 +34,7 @@ One way to enjoy a performance benefit for read queries is to add a [thread](htt
 
 > Simply: break the flow to tasks. Put each task in a new thread's capable hands to fetch and process the data, and the worker itself (main thread) can do other tasks in the meantime, like starting more queries and threads. The limit on concurrent threads is how much the processor can handle.
 
-![Sending queries into their own threads and joining the main thread later.](https://github.com/Moo64c/moo64c.github.io/blob/master/assets/images/2022-08-20-Query%20Grouping/threading.png?raw=true)
+![Sending queries into their own threads and joining the main thread later.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/threading.png?raw=true)
 
 Adapting existing code - splitting the queries into threads - requires more than bit of work. Most of it is finding queries that fit this use case in the code and where they need to `join` back to the main thread. Anything done inside a thread must be [thread-safe](https://en.wikipedia.org/wiki/Thread_safety), since at any given point in the code we can stop and start running some other piece of code with the same state; every time you add a thread the dreaded headache of [locking mechanisms](https://stackoverflow.com/a/34556) is right around the corner. Threads also add a not-so-hidden cost of [_context switching_](https://en.wikipedia.org/wiki/Context_switch), which might eliminate any potential performance benefit.
 
@@ -49,7 +49,7 @@ Client code for Communicator was implemented to block when sending a query to Co
 
 From the worker perspective all the queries would run at the same time, blocking once for all the queries, and the query group taking the group's worst (longest) query's time to execute, which is much better than the sum of time of each individual query. There is a certain overhead cost for grouping up (memory wise), and it also causes sending larger datasets over local TCP sockets - but performance wise it is a very cheap trade off.
 
-![The async mechanism reduces worker wait time by waiting for as many queries as possible at once.](https://github.com/Moo64c/moo64c.github.io/blob/master/assets/images/2022-08-20-Query%20Grouping/Sync%20V%20Async.png?raw=true)
+![The async mechanism reduces worker wait time by waiting for as many queries as possible at once.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/Sync%20V%20Async.png?raw=true)
 
 Changing the queries in the code to group up sounds like a hassle, like the one described for threading above. What about the engineering cost?
 
@@ -70,7 +70,7 @@ Using coroutines has some other terrific property: any piece of code can become 
 
 By combining coroutines with grouped queries we can reduce waiting times for our workers with little engineering hassle. Wrapping an existing block of code in a function and letting some mechanism handle when to `resume` or `yield` takes a relatively low engineering cost. We just need to create that mechanism. Each query and its following logic can be kept pretty much the same; we would only need to verify the independence of grouped queries and their following logic from one another, and old code can enjoy new performance benefits.
 
-![Grouped queries with coroutines must wait work to finish before starting the query execution.](https://github.com/Moo64c/moo64c.github.io/blob/master/assets/images/2022-08-20-Query%20Grouping/normal_vs_threading_vs_grouped.png?raw=true)
+![Grouped queries with coroutines must wait work to finish before starting the query execution.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/normal_vs_threading_vs_grouped.png?raw=true)
 
 The diagram above shows grouping with coroutines might be worse than the threading example, but for most use cases (including ours) worker code will run in **_nanoseconds_**, but queries usually take **_milliseconds_**. This means the worker parts (orange in the diagram) are several _orders of magnitude_ of times smaller than any query (red or blue) wait parts. In practice, grouping with coroutines allows for similar and sometimes even better performance than threading.
 
@@ -79,7 +79,7 @@ _Disproving that last statement is left as an exercise for the reader._ Have a g
 ## Making Queries Great Again
 A new `query_grouping` interface was built to wrap everything discussed here together. It turns the functions containing the queries to coroutines, `yields` when a query is sent during a `group:run()` call and manages the coroutines to `resume` when their query completes. Instead of sending the query immediately, it groups them together, sending it once all coroutines have `yielded`. With minimal additional engineering effort, `query_grouping` can shave several precious _milliseconds_ from any flow that has many queries. In a common API call it can translate to dozens of milliseconds. Dozens!
 
-![Group:run() flow: while coroutines are alive, resume each added coroutine; yield to add queries to a grouped query request. After resuming all once, send the grouped request, repeat.](https://github.com/Moo64c/moo64c.github.io/blob/master/assets/images/2022-08-20-Query%20Grouping/2022-08-20-Query%20Grouping/run_flow.png?raw=true)
+![Group:run() flow: while coroutines are alive, resume each added coroutine; yield to add queries to a grouped query request. After resuming all once, send the grouped request, repeat.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/run_flow.png?raw=true)
 
 In practice, we saw an overall improvement in performance after implementing `query_grouping` in specific API calls. It is implemented only for Cassandra through Communicator with plans for expansion, but that might take a while.
 
@@ -107,7 +107,7 @@ notify_villains()
 ```
 In this code each function would run, query the database twice - making the worker wait on each request - and do something with the results. This somewhat simple case has four queries - each time waiting and immediately sending off another query and waiting again.
 
-![Common flow with multiple independent queries.](https://github.com/Moo64c/moo64c.github.io/blob/master/assets/images/2022-08-20-Query%20Grouping/notify_flow_1.png?raw=true)
+![Common flow with multiple independent queries.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/notify_flow_1.png)
 
 As the functions and their result do not affect one another, they can all run in a query group. To do so we just need to create a group, add the functions, and run it:
 ```lua
@@ -122,7 +122,7 @@ Added callbacks turn automatically into coroutines and `group:run()` runs them, 
 
 > Any code that does not query the database will never reach a `yield` call, meaning it will run until the coroutine is `dead`.
 
-![Same flow with a single query group.](https://github.com/Moo64c/moo64c.github.io/blob/master/assets/images/2022-08-20-Query%20Grouping/2022-08-20-Query%20Grouping/notify_flow_2.png?raw=true)
+![Same flow with a single query group.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/notify_flow_2.png)
 
 ### Crème De La Crème:
 `notify_heroes` runs two queries which we can assume do not affect one another, and the same could be said for `notify_villains`'s queries. After we grouped `notify_heroes` and `notify_villains`, we block twice for two groups of queries: first group has `query_turtles` and `query_automobile`, and the second group of queries includes `query_ninjas` and `query_main_villain`.
@@ -165,7 +165,7 @@ end
 ```
 The `"notify"` group starts by running `notify_heroes` as a coroutine. It creates the `"heroes"` group and runs it. `"heroes"` group runs the `query_turtles` and the `query_ninjas` coroutines, both adding a query to the grouped request and yielding. The `"heroes"` group then _returns the control back_ to the `"notify"` group, allowing `notify_villains` to do the same with the `"villains"` group and its two coroutines. Once `"villains"` completes, control is once again at the `"notify"` group's hands, and having no more coroutines to run in that cycle, the grouped request is sent, waiting on the reply.
 
-![Same flow with nested query grouping.](https://github.com/Moo64c/moo64c.github.io/blob/master/assets/images/2022-08-20-Query%20Grouping/notify_flow_3.png?raw=true)
+![Same flow with nested query grouping.](https://moo64c.github.io/assets/images/2022-08-20-Query%20Grouping/notify_flow_3.png)
 
 **Executing all four** queries would block only **once**, essentially reducing the wait time to the longest query in the group.  If all queries take the same amount of time, we reduced the wait time to **one fourth** of the original code.
 
