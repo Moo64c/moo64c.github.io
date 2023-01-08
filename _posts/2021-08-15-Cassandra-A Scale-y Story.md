@@ -26,7 +26,7 @@ In big-data business you cannot say it happened faster than anticipated because 
 A new customer appeared, and the clusters needed to expand to fit the demand. After the clusters settled, DBAs were a bit nervous. After another customer and a bit more scaling up - DBAs made this a central concern for the development group. This "problem for somebody the future" became next week's problem pretty fast. A ticket is hastily created to minimize connections to the cluster, and future somebody was quickly selected.
 
 
-## Dev Team Presents: Cassandra Communicator
+## Presenting: Cassandra Communicator
 Cassandra Communicator (abbreviated CC) was the solution we came up with.
 
 Have too many connections? No problem. Let's just keep one in a separate process. Local machine sockets are cheap, fast, reliable and easy to run. Have every worker open a socket that handles all its Cassandra needs in one stop-shop. Use a simple protocol and send JSON-formatted instructions, and viola! You got support for any language that can open a local socket. All this - and more - in just one thread and just one connection per machine. A single thread to handle all Cassandra requests from all the worker processes in a machine. CC does this in less than 1 millisecond (usually much less) of time added to the database request and response.
