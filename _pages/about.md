@@ -32,7 +32,7 @@ The blog uses [Giscus](giscus.app) for comments though the GitHub discussion fea
 
 Unless mentioned otherwise, diagrams are made with [Excalidraw](https://excalidraw.com/).
 
-This blog (except the content itself) was made by other people. Obviously I dislike front end...
+The code for this blog (except the content itself) was made by a lot of other people that made this entire thing free. Thanks!
 
 ## License
 All original content here is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
