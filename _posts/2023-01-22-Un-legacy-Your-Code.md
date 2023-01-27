@@ -1,18 +1,17 @@
 ---
-title:  "Un-legacy Your Code (Lua Edition)"
+title:  "How to Unlegacy Your Code _(Lua Edition)_ or: Detect Fraud Faster Please, Part I"
 categories: ["Devlog", "Code Quality"]
 tags: ["lua", "refactoring", "coding"]
-excerpt: A  in rewriting that piece of code nobody wants to rewrite.
+excerpt: How to rewrite a piece of code nobody wants to touch anymore.
 ---
 
-This is _part one_ of three on a major feature expansion I tackled. In part one I share my method for tackling legacy code, rewriting it to match the maintainability standards I acquired in over a decade of professional software engineering. I share my main focus in a code rewrite, the "code smells" I notice and the "solution" for them. I'll close this post with a case study on a different feature I rewrote.
+This post is the first of three about an expansion to a major feature called `structured policy` (or just `policy`). To accomplish any change to this feature, which was in a [haunted forest](https://increment.com/software-architecture/exit-the-haunted-forest/) state, it went through a long rewrite. In this post I'll share my method for tackling this legacy code - how I modify existing code to provide what I consider good readability. I share my main focus in any code rewrite, the "problems" I seek to fix and the "rules" for them, and why every rule matters. The first part ends with a case study about a more recent rewrite to a different feature called `session_timers` (spoiler alert: it becomes `request_timer`).
 
-Post two would discuss the original feature and its rewrite (it would be censored in the public blog).
-Post three would discuss the feature expansion - how we saved hundreds of thousands of dollars with - you guessed it - a new service.
-
+Part two would discuss the `policy` feature and its rewrite.
+Part three would discuss the expansion. What was the goal and how we saved hundreds of thousands of dollars in AWS money with - you guessed it - a new service.
 
 ## The Annoyance of a Good Example
-At the beginning of my professional career - A bit after the first iPad was released - I started working for a ~~ tiny company that builds websites ~~ [_boutique web application shop_](https://www.gizra.com/). I did not know it at the time, but the [CTO](https://github.com/amitaibu) is nothing short of a world-renowned software guru - the type software communities invite (expenses paid) to have them present in large conferences. Just starting out in the software world, I stumbled head first into one of the best mentors a junior developer could ask for.
+At the beginning of my professional career - A bit after the first iPad was released - I started working for a ~~ tiny company that builds websites ~~ [_boutique web application shop_](https://www.gizra.com/). I did not know it at the time, but the [CTO](https://github.com/amitaibu) is nothing short of a world-renowned _Drupal_ "guru" (the Drupal community would invite to have him present in their conferences). Just starting out in the software world, I stumbled head first into one of the best mentors a junior developer could ask for.
 
 Since we were a five-person company at the time, he would be the one to check my _merge requests_, rightfully decimating them for bad function calls, spelling errors, awkward structuring and terrible naming - among other things. In between tasks, I would get time to explore and contribute (on company time) to open source projects, which have their own set of meticulous maintainers and their demands. Being exposed to those methods and structure of work, the meticulousness and adherence to details and procedures was one of the quickest personal professional jumps I could have achieved in such short time span. Quality is always said to be important, but delivering _something_ is always more important. At Gizra, quality trumped, even in the _"did it because we were young and needed money"_ projects.
 
