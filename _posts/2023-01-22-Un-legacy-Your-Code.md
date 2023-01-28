@@ -1,5 +1,5 @@
 ---
-title:  "How to Unlegacy Your Code _(Lua Edition)_ or: Detect Fraud Faster Please, Part I"
+title:  "10X Faster API, Part 1: Un-legacy That Code"
 categories: ["Devlog", "Code Quality"]
 tags: ["lua", "refactoring", "coding"]
 excerpt: How to rewrite a piece of code nobody wants to touch anymore.
