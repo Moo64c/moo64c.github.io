@@ -215,7 +215,6 @@ defaults:
       comments: true
       share: true
       related: true
-      excerpt_separator: <!--more-->
       show_date: true
       toc: true
       toc_label: "Quick Navigation"
