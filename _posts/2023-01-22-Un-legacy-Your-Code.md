@@ -30,11 +30,11 @@ But it should not be a _rule_. `else` statements have their use, and having a co
 <small>If any of the three books above interest you, I would recommend starting with _Clean Code_. Most examples are in Java, and even though I think there's no such thing as _pretty_ Java code, the ideas are clear and easy to follow.</small>
 
 ## More What You'd Call Guidelines Than Actual Rules
-I could break this example further, going on about variable naming and the lack structure in the if statement, but I digress; the idea here is that defining what is good code is purely subjective. I will not be writing any _rules_. Nothing is cemented and everything is subject to change. Instead, I want to provide a single point to focus and expand on, hoping you would take it with you on your coding adventures from now until you retire and live happily growing vegetables and never looking at a computer screen ever again.
+I could break the example above further, going on about variable naming and the missing parenthesis in the if statement, but I digress; the idea here is that defining what is good code is purely subjective. I will not be writing any _rules_. Nothing is set in stone and everything is subject to change. Instead, I want to provide a single point to focus and expand on, hoping you would take it with you on your coding adventures from now until you retire and live happily growing vegetables and poultry, never looking at a computer screen ever again.
 
 That point is **_Readability_**.
 
-
+I use a simple trick with post readability that I keep hearing about whenever I ask for commentary on my posts. Everyone likes the quips, the references like the title above. It helps break down the naturally occurring walls of text in posts like these, and grounds people to certain things. Maybe even helps them remember what I wrote about, who knows. I have been writing
 
 
 None of these actually touch on the most important point: _Readable code takes the load off the developer._ Our goal in rewriting anything, or writing well, is to allow a developer who has never seen the code to understand it as quickly as possible. Reducing complexity to improve readability in any one piece code translates directly to all of these points; inherently, they try to make you need to remember less when going over the code line by line - breaking things down to very simple "sentences".
