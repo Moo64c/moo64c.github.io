@@ -2,7 +2,7 @@
 title:  "Queries in a Pinch"
 categories: ["Devlog", "Lua", "Communicator"]
 tags: [backend, database, cassandra, lua, threading, coroutines, async]
-excerpt: Being smart about database reads speeds up our application.
+excerpt: Smart database reads - speed up an application.
 ---
 
 This post is about an optimization to response times acquired by changing how application workers wait for database query execution. It discusses why we chose this optimization, what were the available options for a solution, what we chose and how we refactored our code - including some samples. That sounds quite in-depth and technical, and although I kept the code samples to the very end to avoid scaring anyone off, it does presume some prior knowledge. I provided additional links to expose more information for the more curious of readers.
