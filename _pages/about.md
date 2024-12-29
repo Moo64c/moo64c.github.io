@@ -10,12 +10,12 @@ toc: true
 
 Hi! I'm Amir.
 
-I write code, write about code, and take pictures of birds. 
+I write code, write about code, and take pictures of birds.
 
 Currently, I work at [IBM Trusteer](https://www.ibm.com/trusteer) as a Senior Software Engineer.
 
 ## About The Blog
-Regularly Irrelevant is my personal blog where I share nifty software engineering challenges and how I handled them. This blog is an outlet for my passion about creating high-quality software; from code readability through designing features to architecture.
+_arbel.dev_ is my personal blog where I share nifty software engineering challenges and how I handled them. This blog is an outlet for my passion about creating high-quality software; from code readability through designing features to architecture.
 
 Software is details - and I try to provide interesting nuggets of those details in my posts.
 

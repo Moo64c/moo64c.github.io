@@ -1,4 +1,4 @@
-# Regularly Irrelevant Blog
+# arbel.dev Blog
 Amir Arbel's Personal blog.
 
 See https://moo64c.github.io/about
