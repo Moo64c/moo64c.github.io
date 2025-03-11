@@ -4,14 +4,14 @@ author: "Amir Arbel"
 categories: ["Devlog", "how-tos"]
 date: "2025-03-11"
 tags: [MacOS, software-development]
-excerpt: Switching to MacOS: The tooling developers need when using MacOS. The good, the bad, and the Terminal Emulators.
+excerpt: "Switching to MacOS: The tooling developers need when using MacOS. The good, the bad, and the Terminal Emulators."
 ---
 
-Switching to Mac for the first time is a big drain on a developer's productivity.  After almost six years, I've learned a whole lot - between grievances to workarounds, tips, tricks and a bit of software. I decided it is time to write some of it down.
+Switching to Mac for the first time is a big drain on a developer's productivity.  After almost six years, I believe I learned quite a lot - between grievances to workarounds, tips, tricks and a bit of software. I decided it is time to write some of it down.
 
-You might have run into this page because you are making the switch yourself, probably because you are forced to do so by an employer, or you are (sanely) thinking to yourself "why not join a closed-end ecosystem of really expensive products?".
+You might have run into this page because you are making the switch yourself, probably because you are forced to do so by an employer, or you are thinking to yourself "why not join a closed-end ecosystem of expensive products?". Why wouldn't you, really?
 
-Whatever the reason, here's s a set of things to know, software and general principals that I use to be as productive as possible with MacOS. These fit my use case, which is mostly keyboard-centric.  I tend to switch parts of it from time to time when I feel its no longer comfortable or slows me down.
+Whatever the reason, here's a set of things to know, software and general principals that I use to be as productive as possible with MacOS. These fit my use case, which is mostly keyboard-centric. This means as less mouse usage as possible, as using the mouse is generally slow. I tend to switch parts of it from time to time when I feel its no longer comfortable or slows me down.
 
 With that introduction out of the way, let's start with some gripes I faced when I switched:
 
@@ -22,14 +22,14 @@ Coming from Windows or Linux, the biggest difference you will face immediately -
 
 If you are coming from Linux, (or already used to a lot of terminal usage) this mostly allows for more shortcuts to be available inside any terminal emulator (and makes a lot more sense than what Windows is doing for copy pasting in the terminal). I believe having `cmd+c/v` instead of the dreaded `ctrl+shift+c/v` for terminals in Linux make a bit more sense, but I'm already biased.
 
-This was actually the hardest switch for me, due to muscle memory built over the years, and avoiding the Mac keyboard layout where possible (using Windows-like keyboards). Even working on a Linux machine for a day and coming back to Mac is still painful - for both sides - after almost six years.
+This was actually the hardest switch for me, due to muscle memory built over the years. I am also at fault for avoiding the Mac keyboard layout by using keyboard with the wrong layout. Even working on a Linux machine for a day and coming back to Mac is still painful after six years. Luckily, I [can easily "fix" Ubuntu](https://askubuntu.com/questions/368437/how-do-i-remap-my-ubuntu-keyboard-shortcuts-to-match-osx) to behave like MacOS.
 
-## Apple Hates Users as a Policy (or: Using the Finder File Manager)
-The second most painful switch was Finder, the file manager. Only five years into working with MacOS, I learned that Finder has `cmd+shift+g` to jump to any folder is all I needed to make it less painful, together with `cmd+1/2/3/4` to change the display layout. But that leads me to another good point about MacOS for new comers:
+## Hating Users as a Policy (or: Using the Finder File Manager)
+The second most painful switch was Finder, the file manager. Five years into working with MacOS I learned that Finder has `cmd+shift+g` to jump to any folder, and it is all I needed to make it less painful, together with `cmd+1/2/3/4` to change the display layout. But that leads me to another good point about MacOS for new comers:
 
  ## ... And Hides Keyboard Shortcuts Where Possible
 **You have to manually find the keyboard shortcuts you need.**
-Finding out about keyboard shortcuts in MacOS (without online help) is one of two: opening up menus and looking for the action you need, and if it has a shortcut - it will be greyed out in the menu item to the right, or just going through every possible settings tab and pane you can navigate into (and there are many).
+Finding keyboard shortcuts in macOS without online help involves either opening menus and looking for the action (if it has a shortcut, it will be displayed to the right), or navigating through every settings tab and pane (and there are too many).
 
 There's no one settings pane and no interactive way to learn what keyboard shortcuts exist. The easier method is to [look them up online](https://support.apple.com/en-us/102650). Changing anything from at the system-wide level is a straight out pain. For example, try to change the spotlight shortcut (`cmd+space`) and see what I mean.
 
@@ -39,9 +39,13 @@ Finder, iTerm2 (later on in this guide), and system-wide shortcuts are all hidde
 
 ## Spotlight (but really, [Raycast](https://www.raycast.com/) )
 Spotlight is the best productivity tool you would get from switching to MacOS. You can get the same thing in [Linux](https://ulauncher.io/) and [Windows](https://learn.microsoft.com/en-us/windows/powertoys/)  with additional tooling, and in MacOS  [Raycast](https://www.raycast.com/)  expand on the Spotlight concept, but the idea is the same:
-`cmd+space` and type anything you want. A program, a command, a setting's name, a webpage - and you are there. Calculator? Built-in. Currency conversions, move a window to the left two thirds of the screen, quick searches, plugins for searching through Jira or Github.
+`cmd+space` and type anything you want.
 
-One-liner for anything you need. Powerful, fast, and absolutely necessary for getting anything done with MacOS. Having it around pretty much cancels the need for launcher bar at the bottom. It is a big change from going through the start menu in Windows, but makes things so much easier. With Aerospace (discussed later), a lot of functionality that forced you to use the mouse is eliminated, which I love.
+A One-liner for anything you need - a part of a program's name, or a command, or a setting's name, or a webpage - and you are there. Calculator? Built-in. Currency conversions, move a window to the left two thirds of the screen, quick searches, plugins for searching through your favorite password manager, Jira or the enterprise Github of your employer. Remembers your most used commands to prefer them over some more obscure ones. Saves snippets for dropping into whatever program you might have focused or directly to your clipboard (also a clipboard manager). Missing anything? [Write your own extension](https://www.raycast.com/developer-program). Need AI? pay for Pro, with a bunch more features (or just add the relevant extension with an API key).
+
+It is not **absolutely critical** to use, but to get anything done with MacOS, it is the multi-tool you need. Not sure how I got by with just Spotlight before, but it was not so centric to any workflow as Raycast. Which is why I unbound the Spotlight shortcut (`cmd+space`) in favor of Raycast (defaults to `super+space`).
+
+Having Raycast around pretty much cancels the need for launcher bar at the bottom. It is a big change from going through the start menu in Windows, but makes things so much easier. With Aerospace (discussed later), a lot of functionality that forced you to use the mouse is eliminated, which I love.
 
 ## The MacOS Package Manager for Developers - [Homebrew](https://brew.sh/)
 Package managers are nothing new, and Homebrew isn't the best one that exists. But in Macs anything development-y would require you to run `brew install`  for something.
@@ -57,16 +61,20 @@ A terminal emulator is something developers spend a lot of time using, and repla
 
 What I'm trying to say here, and will say again when it comes to IDEs - it comes to personal preference. If you never touched a terminal emulator before and will miss nothing I'd suggest taking Ghostty, as it looks the most promising down the line. If you are like me and no longer remember your SSH key's password and need a in-terminal password manger one keyboard shortcut away, iTerm2 is probably the way to go (or maybe set up your password manager as an extension in Raycast, and use it from there).
 
-## A [Window Manager](https://github.com/nikitabobko/AeroSpace) - Aerospace
+## Aerospace - A [Window Manager](https://github.com/nikitabobko/AeroSpace)
 One thing that MacOS sucks at is the `alt+tab` to switch between _windows_. But MacOS switches between _apps_ instead (and it's `cmd+tab`). To switch between different windows in the same app, you need to ```cmd+` ``` like that makes any sense. Why is this a problem?
 
 Say you are just developing away like one does, and end up having to use 2 different windows of VSCode, say one for a backend of a project and one for the frontend. Switching between them and a browser window becomes a pain really, really fast, since you need to use both `cmd+tab` and ```cmd+` ``` to reach the correct VSCode window.
 
-_Aerospace_ makes that switch quite easy - Backend gets the "b" workspace with `shift+option+b` and Frontend gets the "f" workspace with `shift+option+f`. Now jumping between them is just `option+b` and `option+f`.
+_Aerospace_ makes that switch quite easy - Backend gets the "b" workspace with `shift+option+b` and Frontend gets the "f" workspace with `shift+option+f`. Now jumping between them is just `option+b` and `option+f`. Finally, moving the entire "workspace" to a different monitor is just `cmd+shift+tab`. This last part covers all my usage with aerospace, as most windows get their own workspace, which frees me up to do other things.
+
+![Aerospace menu.](https://moo64c.github.io/assets/images/2025-03-11-Getting-Used-to-Macs/Aerospace-menu.png)
 
 Alternatively, we can put both in the same workspace, and either have them stack on top of one another (only one visible at a time) or split the screen left/right or top/bottom, moving between them with vim-style movements (`super+h/j/k/l`).
 
 The other option is to install [something to replicate](https://alt-tab-macos.netlify.app) the known `alt+tab` behavior from Windows or Linux. To me it makes little sense, because I already invested myself into how Macs behave, and made the jump over to Aerospace. `alt+tab` is dead to me.
+
+Lastly, you can use Raycast to manage windows - commands like "left two thirds of the screen" or "top-right quarter" come to mind, but I feel it takes too long to setup to make any sense.
 
 Also glossed over this before, but the `option` key is just the `alt` key. Don't let Tim Cook fool you.
 
@@ -85,8 +93,7 @@ Maybe take the time to switch to a more [privacy-focused](https://vivaldi.com) b
 Whatever you choose (hopefully not Chrome) - make sure to have [uBlock Origin](https://ublockorigin.com) has an extension for proper sanity. Youtube enthusiasts might love [SponsorBlock](https://sponsor.ajay.app) (pro tip: "skip all non-music segments" in the settings makes all the difference). And a [password manager](https://bitwarden.com/download/) since nobody should remember more than two or three passwords in their lives (With Bitwarden -`cmd+shift+l` for auto-fill).
 
 ## What About an IDE? What about Docker?
-Like browsers, modern (and sane) IDEs no longer tie themselves to one operating system. Choose what you are familiar with, and keep looking for better options when they come around. I have been working on **VSCode** with a whole lot of extensions for years - and from time to time try my luck with a bit of [Lazy](https://github.com/folke/lazy.nvim) [Neovim](https://neovim.io) (which takes a bit time to learn).
+Like browsers, modern IDEs no longer tie themselves to one operating system. Choose what you are familiar with, and keep looking for better options when they come around. I have been working on **VSCode** with a whole lot of extensions for years - and from time to time try my luck with a bit of [Lazy](https://github.com/folke/lazy.nvim) [Neovim](https://neovim.io) (which takes a bit time to learn).
 
-As for containers, docker-desktop, Rancher or Podman will work just the same as on Linux. Remember M-series Macs use a different architecture (ARM/AARCH) so you might need to add `platform: linux/x86_64` to your services in the relevant compose files to make some containers work.
-
-Hope this was helpful - and good luck!
+As for containers, docker-desktop, Rancher or Podman will work just the same as on Linux. Pro-tip: M-series Macs use a different architecture (ARM/AARCH), for some containers you might need to add `platform: linux/x86_64` to the compose file or docker command.
+Looking for more things with Mac? Have a question? Drop a comment below!
