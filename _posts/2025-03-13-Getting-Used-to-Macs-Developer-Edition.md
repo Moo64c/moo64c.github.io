@@ -2,7 +2,7 @@
 title:  "Getting Used to Macs, Developer Edition"
 author: "Amir Arbel"
 categories: ["Devlog", "how-tos"]
-date: "2025-03-11"
+date: "2025-03-13"
 tags: [MacOS, software-development]
 excerpt: "Switching to MacOS: The tooling developers need when using MacOS. The good, the bad, and the Terminal Emulators."
 ---
