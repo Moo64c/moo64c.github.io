@@ -65,7 +65,7 @@ A terminal emulator is something developers spend a lot of time using, and repla
 
 What I'm trying to say here, and will say again when it comes to IDEs - it comes to personal preference (and gained knowledge of some tool). If you never touched a terminal emulator before and will miss nothing I'd suggest taking Ghostty, as it looks the most promising down the line. If you are like me and no longer remember your SSH key's password and need a in-terminal password manger one keyboard shortcut away, and you don't tend to benchmark the time it tool to load Neovim on an hourly basis, iTerm2 is probably the way to go.
 
-Another Raycast plug here: Raycast can replace at least some functionality, such as snippets and simple tools, up to setting up a password manager extension in Raycast, and use it from there instead of saving passwords or snippets in a terminal emulator.
+As a side note: Raycast can replace at least some of the functionality I mentioned above. Snippets and simple tools and even password managers are possible in Raycast. This gives you the flexibility to use the same tools outside of the terminal itself.
 
 ## Aerospace - A [Window Manager](https://github.com/nikitabobko/AeroSpace)
 One thing that MacOS sucks at is the `alt+tab` to switch between _windows_. But MacOS switches between _apps_ instead (and it's `cmd+tab`). To switch between different windows in the same app, you need to ```cmd+` ``` like that makes any sense. Why is this a problem?
