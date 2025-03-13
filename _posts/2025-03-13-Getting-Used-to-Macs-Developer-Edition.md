@@ -68,7 +68,7 @@ What I'm trying to say here, and will say again when it comes to IDEs - it comes
 As a side note: Raycast can replace at least some of the functionality I mentioned above. Snippets and simple tools and even password managers are possible in Raycast. This gives you the flexibility to use the same tools outside of the terminal itself.
 
 ## Aerospace - A [Window Manager](https://github.com/nikitabobko/AeroSpace)
-One thing that MacOS sucks at is the `alt+tab` to switch between _windows_. But MacOS switches between _apps_ instead (and it's `cmd+tab`). To switch between different windows in the same app, you need to ```cmd+` ``` like that makes any sense. Why is this a problem?
+One thing that MacOS sucks at is `alt+tab`-ing to switch between _windows_. But MacOS switches between _apps_ instead (and it's `cmd+tab`). To switch between different windows in the same app, you need to use a different shortcut -  ```cmd+` ```. Why is this a problem?
 
 Say you are just developing away like one does, and end up having to use 2 different windows of VSCode, say one for a backend of a project and one for the frontend. Switching between them and a browser window becomes a pain really, really fast, since you need to use both `cmd+tab` and ```cmd+` ``` to reach the correct VSCode window.
 
