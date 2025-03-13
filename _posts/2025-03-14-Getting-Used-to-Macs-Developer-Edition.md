@@ -2,7 +2,7 @@
 title:  "Getting Used to Macs, Developer Edition"
 author: "Amir Arbel"
 categories: ["Devlog", "how-tos"]
-date: "2025-03-13"
+date: "2025-03-14"
 tags: [MacOS, software-development]
 excerpt: "Switching to MacOS: The tooling developers need when using MacOS. The good, the bad, and the Terminal Emulators."
 ---
@@ -11,7 +11,7 @@ Switching to Mac for the first time is a big drain on a developer's productivity
 
 You might have run into this page because you are making the switch yourself, probably because you are forced to do so by an employer, or you are thinking to yourself "why not join a closed-end ecosystem of expensive products?". Why wouldn't you, really?
 
-Whatever the reason, here's a set of things to know, software and general principals that I use to be as productive as possible with MacOS. These fit my use case, which is mostly keyboard-centric. This means as less mouse usage as possible, as using the mouse is generally slow. I tend to switch parts of it from time to time when I feel its no longer comfortable or slows me down.
+Whatever the reason, here's a set of things to know, software and general principals that I use to be as productive as possible with MacOS. These fit my use case, which is mostly keyboard-centric. This means as less mouse usage as possible, as using the mouse is generally slow. I tend to switch parts of it from time to time when I feel they are uncomfortable or slowing me down.
 
 With that introduction out of the way, let's start with some gripes I faced when I switched:
 
@@ -74,6 +74,8 @@ Say you are just developing away like one does, and end up having to use 2 diffe
 
 _Aerospace_ makes that switch quite easy - Backend gets the "b" workspace with `shift+option+b` and Frontend gets the "f" workspace with `shift+option+f`. Now jumping between them is just `option+b` and `option+f`. Finally, moving the entire "workspace" to a different monitor is just `cmd+shift+tab`. This last part covers all my usage with aerospace, as most windows get their own workspace, which frees me up to do other things.
 
+I mean, maybe just watch the [youtube video](https://www.youtube.com/watch?v=UOl7ErqWbrk). It'll make more sense.
+
 ![Aerospace menu.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Aerospace-menu.png)
 
 Alternatively, we can put both in the same workspace, and either have them stack on top of one another (only one visible at a time) or split the screen left/right or top/bottom, moving between them with vim-style movements (`option+h/j/k/l`).
@@ -84,7 +86,7 @@ An alternative option is to install [something to replicate](https://alt-tab-mac
 
 I used to use fullscreen windows and the *three-finger swipe right/left* gesture with the trackpad to move between them (also available as `ctrl+left/right`). Today I find this completely unwieldy, between windows not handling fullscreen mode well and the need to start wildly sweeping to find any single window. It is also quite slow.
 
-You can also use Raycast to manage windows - commands like "left two thirds of the screen" or "top-right quarter" come to mind, but I feel it takes too long to setup to make any sense.
+You can also use Raycast to manage windows - commands like "left two thirds of the screen" or "top-right quarter" come to mind, but with Aerospace it's just immediate instead of clunky.
 
 ![Create a workspace suited for you with Raycast.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Raycast-window.png)
 
@@ -97,7 +99,9 @@ If you are not noting down things while you work, you should start. Trying to ke
 
 ![Obsidian graph view - see how pieces of data connect to each other.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Obsidian-graph-view.png)
 
-The killer feature in Obsidian is linking between notes and tagging. This breaks away any need to make hierarchical decisions upon note creation. Just link it to a relevant note, or tag it - which can be used as folders. Any additional functionality can be added via extensions, and there is a community busy making more and more of those. The Obsidian team also [recently removed](https://help.obsidian.md/teams/license) the requirement to buy a commercial license if you have a job or make money in any way, and use Obsidian to write anything about it.
+The killer feature in Obsidian is linking between notes and tagging. This breaks away any need to make hierarchical decisions upon note creation. Just link it to a relevant note, or tag it - which can be used as folders. Any additional functionality can be added via extensions, and there is a community busy making more and more of those.
+
+ The Obsidian team also [recently removed](https://help.obsidian.md/teams/license) the requirement to buy a commercial license if you have a job or make money in any way, and use Obsidian to write anything about it.
 
 ## Any Browser (But Safari)
 Another flavor-specific item is a browser. Unless you are using a very old or specific browser, you can use the same browser you have used before. Enough has changed in your workflow already. I would suggest avoiding Safari altogether. There is really no reason to use it (anymore than Microsoft's Edge). It is not reliably supported, and Safari has only the downsides of the Mac ecosystem, without real upside.
@@ -115,7 +119,7 @@ I'm not ashamed to say I believe git commits need a GUI, and VSCode's one is mor
 
 As for containers, docker-desktop, Rancher or Podman will work just the same as on Linux. Pro-tip: M-series Macs use a different architecture (ARM/AARCH), for some containers you might need to add `platform: linux/x86_64` to the compose file or docker command.
 
-# Its Never Done
+# It Is Never Done
 As a developer on a new platform you should be looking to find the tools, extensions and configurations to better fit your development needs. I have experimented with dozens of tools over the years and believe I am pointing you at a strong base toolkit.
 
 Thanks for reading! What tools do you use in your developer setup? I still have some gaps in my toolkit - like a Postman alternative.
