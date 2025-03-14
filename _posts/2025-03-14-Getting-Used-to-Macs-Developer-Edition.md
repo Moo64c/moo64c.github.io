@@ -16,7 +16,9 @@ Whatever the reason, here's a set of things to know, software and general princi
 With that introduction out of the way, let's start with some gripes I faced when I switched:
 
 # The Painful Switch
-Coming from Windows or Linux, the biggest difference you will face immediately - most of the keyboard shortcuts you are used to, now use the `command` key (`cmd`) instead of `ctrl`. `cmd` is actually the `windows` key in pretty much any keyboard, and difference in position is physically tiny but mentally huge.
+Coming from Windows or Linux, the biggest difference you will face immediately - most of the keyboard shortcuts you have already mastered use the `command` key (`cmd`) instead of `ctrl`. `cmd` is actually the `windows` key in pretty much any keyboard, and difference in position is physically tiny but mentally huge.
+
+![The worst thing about switching - the keyboard layout difference.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/painful.png)
 
 `cmd` is used for the shortcuts the muscle memory points to `ctrl`, like copy/pasting (`cmd+c/cmd+v` instead of `ctrl+c/ctrl+v`).  Whatever you were used to do with `ctrl` (except maybe escape sequences), you need to re-learn as `cmd`. Another good example would be `cmd+p` instead of `ctrl+p` for the VSCode "jump to file" shortcut.
 
@@ -93,13 +95,13 @@ You can also use Raycast to manage windows - commands like "left two thirds of t
 # (Mostly) Platform Agnostic Things:
 
 ## Note Taking, to the Max
-If you are not noting down things while you work, you should start. Trying to keep every little detail in your mind while developing, chatting, having meetings and designing software is a feat too great for humans. Luckily, computers exist and they can store a lot of data relatively easily. Who would've guessed?
+If you are not noting down things while you work, [you should start](https://www.youtube.com/watch?v=K-ssUVyfn5g). Trying to keep every little detail in your mind while developing, chatting, having meetings and designing software is a feat too great for humans. Luckily, computers exist and they can store a lot of data relatively easily. Who would've guessed?
 
 [Obsidian](obsidian.md) fills the niche for me. Macs come with Apple Notes, a with a very clean UI and a left pane for switching between notes using a small preview, but I find it hard to keep track of things there. [Notion](https://www.notion.com) is also a common option.
 
 ![Obsidian graph view - see how pieces of data connect to each other.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Obsidian-graph-view.png)
 
-The killer feature in Obsidian is linking between notes and tagging. This breaks away any need to make hierarchical decisions upon note creation. Just link it to a relevant note, or tag it - which can be used as folders. Any additional functionality can be added via extensions, and there is a community busy making more and more of those.
+The killer feature in Obsidian is linking between notes and tagging. This breaks away any need to make hierarchical decisions upon note creation. Just link it to a relevant note, or tag it - which can be [used as folders](https://www.youtube.com/watch?v=IaSl21e19ck&pp=ygUbb2JzaWRpYW4gdGFnZ2luZyBhcyBmb2xkZXJz). Any additional functionality can be added via extensions, and there is a community busy making more and more of those.
 
  The Obsidian team also [recently removed](https://help.obsidian.md/teams/license) the requirement to buy a commercial license if you have a job or make money in any way, and use Obsidian to write anything about it.
 
