@@ -27,11 +27,13 @@ If you are coming from Linux, (or already used to a lot of terminal usage) this 
 This was actually the hardest switch for me, due to muscle memory built over the years. I am also at fault for avoiding the Mac keyboard layout by using keyboard with a Windows layout. Even working on a Linux machine for a day and coming back to Mac is still painful after six years. Luckily, I [can easily "fix" Ubuntu](https://askubuntu.com/questions/368437/how-do-i-remap-my-ubuntu-keyboard-shortcuts-to-match-osx) to behave like MacOS.
 
 ## Hating Users as a Policy (or: Using the Finder File Manager)
-The second most painful switch was Finder, the file manager. Five years into working with MacOS I learned that Finder has `cmd+shift+g` to jump to any folder, and it is all I needed to make it less painful, together with `cmd+1/2/3/4` to change the display layout. But that leads me to another good point about MacOS for new comers:
+The second most painful switch was Finder, the file manager. Five years into working with MacOS I learned that Finder has `cmd+shift+g` to jump to any folder, and it is all I needed to make it less painful, together with `cmd+1/2/3/4` to change the display layout. Other important shortcuts are `cmd+opt+p` to show the breadcrumbs and `cmd+shift+.` to toggle showing hidden files. But that leads me to another good point about MacOS for new comers:
 
-## ... And Hides Keyboard Shortcuts Where Possible
+## It Hides Keyboard Shortcuts Where Possible
 **You have to manually find the keyboard shortcuts you need.**
 Finding keyboard shortcuts in macOS without online help involves either opening menus and looking for the action (if it has a shortcut, it will be displayed to the right), or navigating through every settings tab and pane (and there are too many).
+
+![Shortcuts are not hidden, but are hard to figure out.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Finder-menu.png)
 
 There's no one settings pane and no interactive way to learn what keyboard shortcuts exist. The easier method is to [look them up online](https://support.apple.com/en-us/102650). Changing anything from at the system-wide level is a straight out pain. For example, try to change the spotlight shortcut (`cmd+space`) and see what I mean.
 
@@ -74,7 +76,7 @@ One thing that MacOS sucks at is `alt+tab`-ing to switch between _windows_. But 
 
 Say you are just developing away like one does, and end up having to use 2 different windows of VSCode, say one for a backend of a project and one for the frontend. Switching between them and a browser window becomes a pain really, really fast, since you need to use both `cmd+tab` and ```cmd+` ``` to reach the correct VSCode window.
 
-_Aerospace_ makes that switch quite easy - Backend gets the "b" workspace with `shift+option+b` and Frontend gets the "f" workspace with `shift+option+f`. Now jumping between them is just `option+b` and `option+f`. Finally, moving the entire "workspace" to a different monitor is just `cmd+shift+tab`. This last part covers all my usage with aerospace, as most windows get their own workspace, which frees me up to do other things.
+_Aerospace_ makes that switch [quite easy](https://nikitabobko.github.io/AeroSpace/guide) - Backend gets the "b" workspace with `shift+option+b` and Frontend gets the "f" workspace with `shift+option+f`. Now jumping between them is just `option+b` and `option+f`. Finally, moving the entire "workspace" to a different monitor is just `cmd+shift+tab`. This last part covers all my usage with aerospace, as most windows get their own workspace, which frees me up to do other things.
 
 I mean, maybe just watch the [youtube video](https://www.youtube.com/watch?v=UOl7ErqWbrk). It'll make more sense.
 
