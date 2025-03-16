@@ -11,7 +11,7 @@ Sophisticated, new emerging fraud attacks spread every few minutes, leaving cust
 
 In early November, a select group of our customers were introduced to the new *Policy Manager*. With just a few clicks in Trustboard (Trusteer's customer-facing toolkit), they could now create and instantly publish custom rules, directly overriding Pinpoint's risk assessments
 
-![Respond quickly to wide fraud attacks using a simple UI.](https://moo64c.github.io/assets/images/Master-of-Policies/visualization.png)
+![Respond quickly to wide fraud attacks using a simple UI.](https://moo64c.github.io/assets/images/Master-of-Policies/visualization.jpeg)
 
 This new capability enabled instant deployment of alerts and automated actions on emerging threats, as soon as they were detected Previously, a customer-identified threat would trigger a lengthy, multi-team process for analysis, rule creation, and deployment. During this delay, customers remained vulnerable to known threats. *Policy Manager* eliminates this friction, enabling Pinpoint to react swiftly and empower customers to protect their own users
 
@@ -32,7 +32,7 @@ Within _Rules Engine_, the instructions received are first validated as JSON to 
 
 _Policy Manager_ leverages the same dataset as _Policy_, which runs before itm eliminating the need for extra database calls and ensuring optimal performance. It executes rules within a secure sandbox environment, with strictly defined inputs and outputs. When a rule is triggered in Policy Manager, the resulting risk assessment is updated accordingly. This code generation approach enables us, as developers, to continuously optimize performance and add new capabilities without disrupting the production system
 
-![Rules Engine in Pinpoint and *Policy Manager* in Trustboard work together to catch fraud, fast.](https://moo64c.github.io/assets/images/Master-of-Policies/two-sides.png)
+![Rules Engine in Pinpoint and *Policy Manager* in Trustboard work together to catch fraud, fast.](https://moo64c.github.io/assets/images/Master-of-Policies/two-sides.jpeg)
 
 ### One Engine To Rule Them
 
