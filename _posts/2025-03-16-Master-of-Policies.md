@@ -4,9 +4,9 @@ author: "Amir Arbel"
 categories: ["Devlog", "Trusteer", "Lua", "Fraud-detection", "low-code"]
 date: "2025-03-16"
 tags: [MacOS, software-development]
-excerpt: ""
+excerpt: "Bridging the gap between known and new fraud threats. Empowering client to rapidly respond to threats - without writing a single line of code."
 ---
-Sophisticated, new emerging fraud attacks, spreading every few minutes, leaving customers vulnerable. Trusteer Pinpoint is already in place, but traditionally, responding to these unknowns meant a slow, multi-step process. But what if they could deploy defense in mere hours? That's the vision behind Policy Manager, a project I led as a lead developer on the Pinpoint team. We've transformed fraud response, empowering customers with rapid, direct control.
+Sophisticated, new emerging fraud attacks spread every few minutes, leaving customers vulnerable. Trusteer Pinpoint defends against known frauds, but responding to new threats can take days, even weeks. What if we could empower customers to block those threats in mere hours? That's the vision behind Policy Manager, a project I was the lead developer on the Pinpoint team. We've revolutionized fraud response, empowering customers with rapid, direct control
 
 In early November, a select few of our customers were introduced to the new **Policy Manager** - allowing them, with a few clicks in _Trustboard_ (Trusteer's customer-facing toolkit), to create and publish custom rules that can override Pinpoint's risk assessment.
 
