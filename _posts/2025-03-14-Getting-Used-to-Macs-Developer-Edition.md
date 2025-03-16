@@ -2,7 +2,6 @@
 title:  "Getting Used to Macs, Developer Edition"
 layout: single
 categories: ["Devlog", "how-tos"]
-date: "2025-03-14"
 tags: [MacOS, software-development]
 excerpt: "Switching to MacOS: The tooling developers need when using MacOS. The good, the bad, and the Terminal Emulators."
 ---

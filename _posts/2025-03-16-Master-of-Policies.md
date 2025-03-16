@@ -2,7 +2,6 @@
 title: "Manager of Policies"
 layout: single
 categories: ["Devlog"]
-date: "2025-03-16"
 tags: ["Trusteer", "Lua", "Fraud-detection", "low-code"]
 excerpt: "Bridging the gap between known and new fraud threats. Empowering client to rapidly respond to threats - without writing a single line of code."
 ---

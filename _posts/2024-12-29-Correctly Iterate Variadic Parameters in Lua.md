@@ -2,7 +2,6 @@
 title:  "Correctly Iterate Variadic Parameters in Lua"
 layout: single
 categories: ["Devlog", "Lua", "how-tos"]
-date: "2024-12-29"
 tags: [lua]
 excerpt: Using `select` to handle a Lua quirk.
 ---
