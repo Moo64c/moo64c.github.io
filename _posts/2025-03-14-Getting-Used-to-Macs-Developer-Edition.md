@@ -82,8 +82,6 @@ _Aerospace_ makes that switch [quite easy](https://nikitabobko.github.io/AeroSpa
 
 I mean, maybe just watch the [youtube video](https://www.youtube.com/watch?v=UOl7ErqWbrk). It'll make more sense.
 
-![Aerospace menu.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Aerospace-menu.png)
-
 Alternatively, we can put both in the same workspace, and either have them stack on top of one another (only one visible at a time) or split the screen left/right or top/bottom, moving between them with vim-style movements (`option+h/j/k/l`).
 
 ![Aerospace can stack vertically or horizontally - or hide windows behind one another.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Aerospace-vertical-stack.png)

@@ -31,7 +31,7 @@ Within _Rules Engine_, the instructions received are first validated as JSON to 
 
 ![A bit of the templating engine. Uses a formal language definition to create flexible code blocks.](https://moo64c.github.io/assets/images/Master-of-Policies/formal-language.png)
 
-_Policy Manager_ leverages the same dataset as _Policy_, which runs before itm eliminating the need for extra database calls and ensuring optimal performance. It executes rules within a secure sandbox environment, with strictly defined inputs and outputs. When a rule is triggered in Policy Manager, the resulting risk assessment is updated accordingly. This code generation approach enables us, as developers, to continuously optimize performance and add new capabilities without disrupting the production system.
+_Policy Manager_ leverages the same dataset as _Policy_, which runs before it, eliminating the need for extra database calls and ensuring optimal performance. It executes rules within a secure sandbox environment, with strictly defined inputs and outputs. When a rule is triggered in Policy Manager, the resulting risk assessment is updated accordingly. This code generation approach enables us, as developers, to continuously optimize performance and add new capabilities without disrupting the production system.
 
 ![Rules Engine in Pinpoint and *Policy Manager* in Trustboard work together to catch fraud, fast.](https://moo64c.github.io/assets/images/Master-of-Policies/two-sides.jpeg)
 
