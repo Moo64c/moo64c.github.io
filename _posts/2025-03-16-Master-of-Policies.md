@@ -13,7 +13,7 @@ In early November, a select group of our customers were introduced to the new *P
 
 ![Respond quickly to wide fraud attacks using a simple UI.](https://moo64c.github.io/assets/images/Master-of-Policies/visualization.jpeg)
 
-This new capability enabled instant deployment of alerts and automated actions on emerging threats, as soon as they were detected Previously, a customer-identified threat would trigger a lengthy, multi-team process for analysis, rule creation, and deployment. During this delay, customers remained vulnerable to known threats. *Policy Manager* eliminates this friction, enabling Pinpoint to react swiftly and empower customers to protect their own users.
+This new capability enabled instant deployment of alerts and automated actions on emerging threats, as soon as they were detected. Previously, a customer-identified threat would trigger a lengthy, multi-team process for analysis, rule creation and deployment. During this delay, customers remained vulnerable to known threats. *Policy Manager* eliminates this friction, enabling Pinpoint to react swiftly and empower customers to protect their own users.
 
 *Policy Manager*'s impact was immediate. Within days, it began alerting on suspected fraud. A month later, a customer experienced a critical scenario: a previously blocked attack bypassed detection due to a configuration issue. Using Policy Manager, they swiftly identified and blocked the attack in **just three hours**, showcasing the tool's power in real-world situations.
 
