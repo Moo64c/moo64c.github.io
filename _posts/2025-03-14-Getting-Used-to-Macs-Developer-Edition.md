@@ -68,7 +68,7 @@ Ask any hipster developer and they'll point you to any of the *cutting-edge, bla
 
 A terminal emulator is something developers spend a lot of time using, and replacing it is pretty difficult. A missing feature or unexpected behavior or rendering can just send you running back to the familiar one. Make sure you have the features you need in the emulator you choose and it makes sense to you. I've been with iTerm2 since the beginning and couldn't make a change (so far). The main issue is it takes a long long while to learn or even find out about features you might want since it might be hidden in plain sight, or in iTerm2's case - under the third tab of the pop up window that comes from pressing the correct button under the right list of items, somewhere three levels deep into the profiles (and not keybinding!) tab of the options window.
 
-What I'm trying to say here, and will say again when it comes to IDEs - it comes to personal preference (and gained knowledge of some tool). If you never touched a terminal emulator before and will miss nothing I'd suggest taking Ghostty, as it looks the most promising down the line. If you are like me and no longer remember your SSH key's password and need a in-terminal password manger one keyboard shortcut away, and you don't tend to benchmark the time it tool to load Neovim on an hourly basis, iTerm2 is probably the way to go.
+What I'm trying to say here, and will say again when it comes to IDEs - it comes to personal preference (and gained knowledge of some tool). If you never touched a terminal emulator before and will miss nothing I'd suggest taking Ghostty, as it looks the most promising down the line. If you are like me and no longer remember your SSH key's password and need an in-terminal password manger one keyboard shortcut away, and you don't tend to benchmark the time it tool to load Neovim on an hourly basis, iTerm2 is probably the way to go.
 
 As a side note: Raycast can replace at least some of the functionality I mentioned above. Snippets and simple tools and even password managers are possible in Raycast. This gives you the flexibility to use the same tools outside of the terminal itself.
 
@@ -98,7 +98,7 @@ You can also use Raycast to manage windows - commands like "left two thirds of t
 ## Note Taking, to the Max
 If you are not noting down things while you work, [you should start](https://www.youtube.com/watch?v=K-ssUVyfn5g). Trying to keep every little detail in your mind while developing, chatting, having meetings and designing software is a feat too great for humans. Luckily, computers exist and they can store a lot of data relatively easily. Who would've guessed?
 
-[Obsidian](obsidian.md) fills the niche for me. Macs come with Apple Notes, a with a very clean UI and a left pane for switching between notes using a small preview, but I find it hard to keep track of things there. [Notion](https://www.notion.com) is also a common option.
+[Obsidian](obsidian.md) fills the niche for me. Macs come with Apple Notes which have a very clean UI and and left pane for switching between notes using a small preview. I find it hard to keep track of things there. [Notion](https://www.notion.com) is also a common option.
 
 ![Obsidian graph view - see how pieces of data connect to each other.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Obsidian-graph-view.png)
 
@@ -111,7 +111,7 @@ Another flavor-specific item is a browser. Unless you are using a very old or sp
 
 Maybe take the time to switch to a more [privacy-focused](https://vivaldi.com) browser (or at least one that claims to be?). As a [previous user](https://connect.mozilla.org/t5/discussions/information-about-the-new-terms-of-use-and-updated-privacy/m-p/87735) of [Firefox](https://www.mozilla.org/en-US/firefox/new/), it and other non-chromium browsers tend to have more difficulties in certain sites.
 
-Whatever you choose (hopefully not Chrome) - make sure to have [uBlock Origin](https://ublockorigin.com) has an extension for proper sanity. Youtube enthusiasts might love [SponsorBlock](https://sponsor.ajay.app) (pro tip: "skip all non-music segments" in the settings makes all the difference). And a [password manager](https://bitwarden.com/download/) since nobody should remember more than two or three passwords in their lives (With Bitwarden -`cmd+shift+l` for auto-fill).
+Whatever you choose (hopefully not Chrome) - make sure to have [uBlock Origin](https://ublockorigin.com) as an extension. Youtube enthusiasts might love [SponsorBlock](https://sponsor.ajay.app) (pro tip: "skip all non-music segments" in the settings makes all the difference). And a [password manager](https://bitwarden.com/download/) since nobody should remember more than two or three passwords in their lives (With Bitwarden -`cmd+shift+l` for auto-fill).
 
 ## What About an IDE? What about Docker?
 Like browsers, modern IDEs no longer tie themselves to one operating system. I have been working on **VSCode** with a whole lot of extensions for years - and from time to time try my luck with a bit of [Lazy](https://github.com/folke/lazy.nvim) [Neovim](https://neovim.io) (which takes a bit time to learn).
