@@ -1,11 +1,10 @@
 ---
 title:  "Correctly Iterate Variadic Parameters in Lua"
-author: "Amir Arbel"
+layout: single
 categories: ["Devlog", "Lua", "how-tos"]
 date: "2024-12-29"
 tags: [lua]
 excerpt: Using `select` to handle a Lua quirk.
-layout: single
 ---
 
 Our logger functionality exposes a simple interface, which doesn't limit the number of items you can send it.

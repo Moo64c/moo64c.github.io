@@ -1,12 +1,10 @@
 ---
 title: "Manager of Policies"
-author: "Amir Arbel"
+layout: single
 categories: ["Devlog"]
 date: "2025-03-16"
 tags: ["Trusteer", "Lua", "Fraud-detection", "low-code"]
-author_profile: true
 excerpt: "Bridging the gap between known and new fraud threats. Empowering client to rapidly respond to threats - without writing a single line of code."
-layout: single
 ---
 Sophisticated, new emerging fraud attacks spread every few minutes, leaving customers vulnerable. Trusteer Pinpoint defends against known frauds, but responding to new threats can take days, even weeks. What if we could empower customers to block those threats in mere hours? That's the vision behind *Policy Manager*, a project I was the lead developer on the Pinpoint team. We've revolutionized fraud response, empowering customers with rapid, direct control.
 
