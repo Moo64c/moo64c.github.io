@@ -2,6 +2,7 @@
 title:  "Queries in a Pinch"
 layout: single
 categories: ["Devlog", "Lua", "Communicator"]
+date: "2022-12-22"
 tags: [backend, database, cassandra, lua, threading, coroutines, async]
 excerpt: Being smart about database reads speeds up our application.
 ---
