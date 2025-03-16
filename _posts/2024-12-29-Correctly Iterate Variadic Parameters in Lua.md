@@ -5,9 +5,10 @@ categories: ["Devlog", "Lua", "how-tos"]
 date: "2024-12-29"
 tags: [lua]
 excerpt: Using `select` to handle a Lua quirk.
+layout: single
 ---
 
-Our logger functionality exposes a simple interface, which doesn't limit the number of items you can send it. 
+Our logger functionality exposes a simple interface, which doesn't limit the number of items you can send it.
 
 ```lua
 function M.info(...)
@@ -36,7 +37,7 @@ How to fix this? Using `select`!
 - `select("#", ...)` retrieves the actual number of items hidden in the variadic parameter.
 - `select(i, ...)` will retrieve the item in index `i` (remember they start at 1 in Lua) from the variadic parameter.
 
-For example - 
+For example -
 
 ```lua
 local reduce_to_string = function(...)

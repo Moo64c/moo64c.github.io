@@ -5,6 +5,7 @@ categories: ["Devlog", "how-tos"]
 date: "2025-03-14"
 tags: [MacOS, software-development]
 excerpt: "Switching to MacOS: The tooling developers need when using MacOS. The good, the bad, and the Terminal Emulators."
+layout: single
 ---
 
 Switching to Mac for the first time is a big drain on a developer's productivity.  After almost six years, I believe I learned quite a lot - between grievances to workarounds, tips, tricks and a bit of software. I decided it is time to write some of it down.
