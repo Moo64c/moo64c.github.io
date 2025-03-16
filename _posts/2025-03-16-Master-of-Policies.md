@@ -6,14 +6,14 @@ date: "2025-03-16"
 tags: ["Trusteer", "Lua", "Fraud-detection", "low-code"]
 excerpt: "Bridging the gap between known and new fraud threats. Empowering client to rapidly respond to threats - without writing a single line of code."
 ---
-Sophisticated, new emerging fraud attacks spread every few minutes, leaving customers vulnerable. Trusteer Pinpoint defends against known frauds, but responding to new threats can take days, even weeks. What if we could empower customers to block those threats in mere hours? That's the vision behind *Policy Manager*, a project I was the lead developer on the Pinpoint team. We've revolutionized fraud response, empowering customers with rapid, direct control
+Sophisticated, new emerging fraud attacks spread every few minutes, leaving customers vulnerable. Trusteer Pinpoint defends against known frauds, but responding to new threats can take days, even weeks. What if we could empower customers to block those threats in mere hours? That's the vision behind *Policy Manager*, a project I was the lead developer on the Pinpoint team. We've revolutionized fraud response, empowering customers with rapid, direct control.
 
 
-In early November, a select group of our customers were introduced to the new *Policy Manager*. With just a few clicks in Trustboard (Trusteer's customer-facing toolkit), they could now create and instantly publish custom rules, directly overriding Pinpoint's risk assessments
+In early November, a select group of our customers were introduced to the new *Policy Manager*. With just a few clicks in Trustboard (Trusteer's customer-facing toolkit), they could now create and instantly publish custom rules, directly overriding Pinpoint's risk assessments.
 
 ![Respond quickly to wide fraud attacks using a simple UI.](https://moo64c.github.io/assets/images/Master-of-Policies/visualization.jpeg)
 
-This new capability enabled instant deployment of alerts and automated actions on emerging threats, as soon as they were detected Previously, a customer-identified threat would trigger a lengthy, multi-team process for analysis, rule creation, and deployment. During this delay, customers remained vulnerable to known threats. *Policy Manager* eliminates this friction, enabling Pinpoint to react swiftly and empower customers to protect their own users
+This new capability enabled instant deployment of alerts and automated actions on emerging threats, as soon as they were detected Previously, a customer-identified threat would trigger a lengthy, multi-team process for analysis, rule creation, and deployment. During this delay, customers remained vulnerable to known threats. *Policy Manager* eliminates this friction, enabling Pinpoint to react swiftly and empower customers to protect their own users.
 
 *Policy Manager*'s impact was immediate. Within days, it began alerting on suspected fraud. A month later, a customer experienced a critical scenario: a previously blocked attack bypassed detection due to a configuration issue. Using Policy Manager, they swiftly identified and blocked the attack in **just three hours**, showcasing the tool's power in real-world situations.
 
@@ -30,7 +30,7 @@ Within _Rules Engine_, the instructions received are first validated as JSON to 
 
 ![A bit of the templating engine. Uses a formal language definition to create flexible code blocks.](https://moo64c.github.io/assets/images/Master-of-Policies/formal-language.png)
 
-_Policy Manager_ leverages the same dataset as _Policy_, which runs before itm eliminating the need for extra database calls and ensuring optimal performance. It executes rules within a secure sandbox environment, with strictly defined inputs and outputs. When a rule is triggered in Policy Manager, the resulting risk assessment is updated accordingly. This code generation approach enables us, as developers, to continuously optimize performance and add new capabilities without disrupting the production system
+_Policy Manager_ leverages the same dataset as _Policy_, which runs before itm eliminating the need for extra database calls and ensuring optimal performance. It executes rules within a secure sandbox environment, with strictly defined inputs and outputs. When a rule is triggered in Policy Manager, the resulting risk assessment is updated accordingly. This code generation approach enables us, as developers, to continuously optimize performance and add new capabilities without disrupting the production system.
 
 ![Rules Engine in Pinpoint and *Policy Manager* in Trustboard work together to catch fraud, fast.](https://moo64c.github.io/assets/images/Master-of-Policies/two-sides.jpeg)
 
@@ -49,7 +49,7 @@ Users interact with a simplified interface, completely removed from the complexi
 
 ![Setting order, enabling and disabling rules in Policy Manager's UI.](https://moo64c.github.io/assets/images/Master-of-Policies/ruleset.png)
 
-At present, customers can utilize a single ruleset affecting all applications. Upon a 'publish' action, the UI assembles the instructions, and the _Rules Engine_ compiles and distributes the code to the appropriate Pinpoint clusters in minutes
+At present, customers can utilize a single ruleset affecting all applications. Upon a 'publish' action, the UI assembles the instructions, and the _Rules Engine_ compiles and distributes the code to the appropriate Pinpoint clusters in minutes.
 
 ### What's Next?
 
