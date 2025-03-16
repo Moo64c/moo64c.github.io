@@ -21,7 +21,7 @@ Coming from Windows or Linux, the biggest difference you will face immediately -
 
 `cmd` is used for the shortcuts the muscle memory points to `ctrl`, like copy/pasting (`cmd+c/cmd+v` instead of `ctrl+c/ctrl+v`).  Whatever you were used to do with `ctrl` (except maybe escape sequences), you need to re-learn as `cmd`. Another good example would be `cmd+p` instead of `ctrl+p` for the VSCode "jump to file" shortcut.
 
-If you are coming from Linux, (or already used to a lot of terminal usage) this mostly allows for more shortcuts to be available inside any terminal emulator (and makes a lot more sense than what Windows is doing for copy pasting in the terminal). I believe having `cmd+c/v` instead of the dreaded `ctrl+shift+c/v` for terminals in Linux make a bit more sense, but I'm already biased.
+If you are coming from Linux - or just already using the terminal a lot - MacOS allow for more shortcuts to be available inside any terminal emulator, and makes a lot more sense than what Windows is doing for copy pasting in the terminal. I believe having `cmd+c/v` instead of the dreaded `ctrl+shift+c/v` for terminals in Linux make a bit more sense, but I'm already biased.
 
 This was actually the hardest switch for me, due to muscle memory built over the years. I am also at fault for avoiding the Mac keyboard layout by using keyboard with a Windows layout. Even working on a Linux machine for a day and coming back to Mac is still painful after six years. Luckily, I [can easily "fix" Ubuntu](https://askubuntu.com/questions/368437/how-do-i-remap-my-ubuntu-keyboard-shortcuts-to-match-osx) to behave like MacOS.
 
