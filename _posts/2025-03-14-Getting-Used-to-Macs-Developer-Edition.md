@@ -54,6 +54,11 @@ It is not **absolutely critical** to use, but to get anything done with MacOS, i
 
 Having Raycast around pretty much cancels the need for launcher bar at the bottom. It is a big change from going through the start menu in Windows, but makes things so much easier. With Aerospace (discussed later), a lot of functionality that forced you to use the mouse is eliminated, making anything you do faster, which is exactly what I want to achieve.
 
+### Staying Awake with Caffeinate
+Your Mac has the time-to-sleep setting locked by your employer? You can bypass that by toggling the Caffeinate utility (native to Macs). It can be run inside a command line but with Raycast you can just toggle it (or enable it for X hours). Alternatively you can switch it to show an icon in the status bar.
+
+![Caffeinate via Raycast.](https://moo64c.github.io/assets/images/Getting-Used-to-Macs/Caffeinate.png)
+
 ## The MacOS Package Manager for Developers - [Homebrew](https://brew.sh/)
 Package managers are nothing new, and Homebrew isn't the best one that exists. But in Macs anything development-y would require you to run `brew install`  for something.
 
